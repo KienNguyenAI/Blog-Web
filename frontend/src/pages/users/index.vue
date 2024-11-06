@@ -1,4 +1,4 @@
 <template>
-    Day la trang cua user
+    . Day la con
     <router-view></router-view>
 </template>
