@@ -14,10 +14,14 @@
                             <span class="mb-3 text-start w-100" style="color: #4d4d4d;">Đăng ký bằng email</span>
                             <a-input size="large" placeholder="email@example.com" class="mb-3" />
                             <div class="row mb-3 ">
-                                <div class="col-8" style="font-size: 0.85rem;">Thư xác nhận sẽ được gửi
-                                    vào thư tài khoản của bạn</div>
-                                <div class="col-4"><a-button size="large" type="primary" class="mb-3"
-                                        style="width: 100%;">gửi</a-button></div>
+                                <div class="col-8">
+                                    <span style="font-size: 0.85rem;">Thư xác nhận sẽ được gửi vào thư tài khoản của
+                                        bạn</span>
+                                </div>
+                                <div class="col-4">
+                                    <a-button size="large" type="primary" class="mb-3"
+                                        style="width: 100%;">gửi</a-button>
+                                </div>
                             </div>
                             <span class="mb-3 text-start w-100" style="color: #4d4d4d;">Đã có tài khoản?
                                 <router-link to="/login" class="text-decoration-none">

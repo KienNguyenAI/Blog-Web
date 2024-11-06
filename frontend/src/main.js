@@ -7,14 +7,15 @@ import App from './App.vue'
 import axios from 'axios';
 window.axios = axios;
 
-// import './satics/fontawesome/css/all.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'ant-design-vue/dist/reset.css';
 import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap/dist/css/bootstrap-utilities.min.css";
 
 import {
     Input,
-    Button
+    Button,
+    Menu
 } from 'ant-design-vue';
 
 
@@ -23,5 +24,6 @@ const app = createApp(App);
 // app.use(createPinia());
 app.use(Input);
 app.use(Button);
+app.use(Menu);
 app.use(router);
 app.mount('#app');
