@@ -24,24 +24,20 @@
                         được bao lâu. Ba ngày? Một tiếng? Hay 15 phút?...</span>
                 </div>
                 <div class="row">
-                    <div class="col-2">
+                    <div class=" col-10 d-flex pe-0  align-items-center">
                         <div class="avatar-container">
                             <img src="../assets/download.jpeg" alt="Avatar" class="avatar-image">
                         </div>
-
+                        <span class="username">Trịnh Trần phương tuấn</span>
+                        <span class="time"> 4 phút đọc</span>
                     </div>
-                    <div class="col-10 p-0 d-flex flex-column justify-content-center">
-                        <div class="row ">
-                            <div class=" col-10 d-flex ">
-                                <span class="username">Trịnh Trần phương tuấn</span>
-                                <span class="time"> 4 phút đọc</span>
-                            </div>
-                            <div class="col-2 justify-content-end p-0">
-                                <i class="fa-regular fa-bookmark me-3" style="color: #c3c3c3;"
-                                    onclick="this.classList.toggle('fa-solid')"></i>
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </div>
+                    <div class="col-2 d-flex align-items-center">
+                        <div class=" me-3 d-flex align-items-center">
+                            <i class="fa-solid fa-caret-up fa-xl"></i>
+                            <span style="font-size: 0.75rem;" class="ms-1">19</span>
                         </div>
+
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
                     </div>
                 </div>
             </div>
@@ -108,6 +104,7 @@
 }
 
 .username {
+    padding-left: 0.5rem;
     padding-right: 0.5rem;
     font-size: 0.875rem;
     font-weight: bold;
