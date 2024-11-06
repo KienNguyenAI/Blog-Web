@@ -13,12 +13,15 @@ import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap/dist/css/bootstrap-utilities.min.css";
 
 import {
-
+    Input,
+    Button
 } from 'ant-design-vue';
 
 
 
 const app = createApp(App);
 // app.use(createPinia());
+app.use(Input);
+app.use(Button);
 app.use(router);
 app.mount('#app');
