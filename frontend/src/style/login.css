@@ -1,0 +1,18 @@
+.items {
+    padding-left: 6.25rem;
+    padding-right: 6.25rem;
+}
+
+@media (max-width: 1600px) {
+    .items {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .items {
+        padding-left: .75rem;
+        padding-right: .75rem;
+    }
+}

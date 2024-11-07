@@ -28,3 +28,6 @@
         </div>
     </form>
 </template>
+<style scoped>
+@import "../../style/login.css";
+</style>
