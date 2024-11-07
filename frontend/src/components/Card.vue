@@ -1,9 +1,7 @@
 <template>
     <div class="card d-flex p-0 mt-3 mb-3">
         <a href="" class="thumbnail">
-            <div class="container">
-                <img src="../assets/download.jpeg" alt="thumbnail" class="img-card">
-            </div>
+            <img src="../assets/download.jpeg" alt="thumbnail" class="img-card">
 
         </a>
         <div class="card-bottom">
@@ -37,9 +35,8 @@
             </div>
             <div class="post-details d-flex justify-content-center align-items-center ">
                 <a href="" class="me-3">
-                    <a-avatar :size="48">
-
-                    </a-avatar>
+                    <img src="../assets/download.jpeg" alt="Avatar" class="rounded-circle"
+                        style="width: 3rem; height: 3rem;">
                 </a>
                 <div class="details">
                     <div class="author mb-1">
@@ -77,6 +74,7 @@
     width: 100%;
     display: flex;
     box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+    flex-direction: row;
 }
 
 .thumbnail {
@@ -85,11 +83,6 @@
     height: 11rem;
     overflow: hidden;
     margin-right: 1rem;
-}
-
-.container {
-    position: relative;
-    width: 100%;
 }
 
 .img-card {
@@ -145,5 +138,42 @@
 .create-at {
     font-size: .75rem;
     color: #4d4d4d;
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex-direction: column;
+        /* Đặt thẻ card theo chiều dọc khi trên màn hình nhỏ */
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: 11rem;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+
+    .img-card {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card-bottom {
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .title {
+        font-size: 1.1rem;
+    }
+
+    .description {
+        max-height: none;
+    }
+
+    .create-at {
+        font-size: .8rem;
+    }
 }
 </style>
