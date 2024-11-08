@@ -12,9 +12,8 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-8 col-12 d-sm-flex mt-3">
-
-                <Card />
+            <div class="col-sm-8 col-12 mt-3">
+                <TheMenu />
             </div>
             <div class="col-sm-4 d-none"></div>
         </div>
@@ -24,11 +23,15 @@
 
 <script>
 import TheHeader from '../components/TheHeader.vue';
+import TheMenu from '../components/TheFeed.vue';
 import Card from '../components/Card.vue';
+
 export default {
     components: {
         TheHeader,
-        Card
+        Card,
+        TheMenu
+
     }
 }
 </script>
