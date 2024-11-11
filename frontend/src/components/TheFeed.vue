@@ -55,7 +55,7 @@ export default {
     methods: {
         selectItem(item, sort) {
             this.selectedItem = item;
-            this.$router.push({ path: '/user', query: { sort: sort } });
+            this.$router.push({ path: '/', query: { sort: sort } });
         }
     }
 };

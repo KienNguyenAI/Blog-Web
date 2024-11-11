@@ -14,6 +14,14 @@ import "bootstrap/dist/css/bootstrap-utilities.min.css";
 
 import Antd from 'ant-design-vue';
 
+// Kiểm tra URL khi ứng dụng khởi động
+router.beforeEach((to, from, next) => {
+    if (to.path === '/' && !to.query.sort) {
+        next({ path: '/', query: { sort: 'hot' } });
+    } else {
+        next();
+    }
+});
 
 
 const app = createApp(App);

@@ -1,5 +1,5 @@
 import PublicLayout from "../layout/public.vue";
-import Test from "../pages/users/index.vue";
+import Main from "../pages/users/index.vue";
 
 // Login
 import login from "../pages/auth/login.vue";
@@ -11,15 +11,8 @@ import resetPassword from "../pages/auth/resetPassword.vue";
 
 const publicRoutes = [
     {
-        path: '/user',
+        path: '/',
         component: PublicLayout,
-        children: [
-            {
-                path: 'test',
-                name: "user-test",
-                component: Test,
-            }
-        ]
     },
     // Router to login
     {

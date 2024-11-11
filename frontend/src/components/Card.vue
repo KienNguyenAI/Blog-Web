@@ -1,5 +1,5 @@
 <template>
-    <div class="card d-flex p-0 mt-3 mb-3">
+    <div class="card d-flex">
         <a href="" class="thumbnail">
             <img src="../assets/download.jpeg" alt="thumbnail" class="img-card">
 
@@ -24,7 +24,7 @@
                 <div class="content">
                     <div class="text ">
                         <a href="" class="text-decoration-none">
-                            <h1 class="title">HCTVPG #6 - Vì sao bạn sẽ muốn đuổi Shakyamuni ra khỏi nhà?</h1>
+                            <h1 class="title fw-bold">HCTVPG #6 - Vì sao bạn sẽ muốn đuổi Shakyamuni ra khỏi nhà?</h1>
                         </a>
                     </div>
                     <div class="description">
@@ -34,13 +34,13 @@
                 </div>
             </div>
             <div class="post-details d-flex justify-content-center align-items-center ">
-                <a href="" class="me-3">
+                <a href="" class="me-3 p-0">
                     <img src="../assets/download.jpeg" alt="Avatar" class="rounded-circle"
                         style="width: 3rem; height: 3rem;">
                 </a>
                 <div class="details">
                     <div class="author mb-1">
-                        <a href="" class="text-decoration-none text-black fw-bold">Trịnh Trần Phương Tuấn</a>
+                        <a href="" class="text-decoration-none text-black fw-bold p-0">Trịnh Trần Phương Tuấn</a>
                     </div>
                     <div class="d-flex justify-content-between">
                         <div class="create-at">17 giờ trước</div>
@@ -65,8 +65,6 @@
             </div>
         </div>
     </div>
-
-
 </template>
 
 
