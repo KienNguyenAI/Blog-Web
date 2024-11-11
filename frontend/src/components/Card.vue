@@ -6,9 +6,9 @@
         </a>
         <div class="card-bottom">
             <div class="main">
-                <div class="heading-contain  mb-3 d-flex justify-content-between">
+                <div class="heading-contain  d-flex justify-content-between">
                     <div class="d-flex align-items-center">
-                        <a href="" class="text-decoration-none">
+                        <a href="" class="text-decoration-none p-0">
                             <span class="category">QUAN ĐIỂM - TRANH LUẬN</span>
                         </a>
                         <span style="color: #c3c3c3;">&emsp;|&emsp;</span>
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="content">
-                    <div class="text">
+                    <div class="text ">
                         <a href="" class="text-decoration-none">
                             <h1 class="title">HCTVPG #6 - Vì sao bạn sẽ muốn đuổi Shakyamuni ra khỏi nhà?</h1>
                         </a>

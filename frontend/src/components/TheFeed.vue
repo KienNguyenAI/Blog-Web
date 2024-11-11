@@ -14,7 +14,7 @@
                 <StarOutlined class="icon" />
                 <span class="text">MỚI</span>
             </a>
-            <a href="#" class="item follow" :class="{ active: selectedItem === 'DANH CHO BẠN' }"
+            <a href="#" class="item follow" :class="{ active: selectedItem === 'DÀNH CHO BẠN' }"
                 @click.prevent="selectItem('DÀNH CHO BẠN', 'follow')">
                 <HeartOutlined class="icon" />
                 <span class="text">THEO TÁC GIẢ</span>
@@ -55,7 +55,6 @@ export default {
     methods: {
         selectItem(item, sort) {
             this.selectedItem = item;
-            // Cập nhật URL với tham số `sort`
             this.$router.push({ path: '/user', query: { sort: sort } });
         }
     }
@@ -116,5 +115,11 @@ a {
 
 .card-gallery {
     margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .filter {
+        display: none;
+    }
 }
 </style>
