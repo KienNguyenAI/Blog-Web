@@ -1,6 +1,5 @@
 import PublicLayout from "../layout/public.vue";
-import Main from "../pages/users/index.vue";
-
+import topBlogs from "../pages/users/topBlogs.vue";
 // Login
 import login from "../pages/auth/login.vue";
 import signup from "../pages/auth/signup.vue";
@@ -8,6 +7,7 @@ import forgotPassword from "../pages/auth/forgotPassword.vue";
 import createAccount from "../pages/auth/createAccount.vue";
 import resetPassword from "../pages/auth/resetPassword.vue";
 // ----------------------------------------
+
 
 const publicRoutes = [
     {
@@ -25,6 +25,7 @@ const publicRoutes = [
         name: 'sign-up',
         component: signup,
     },
+
     {
         path: '/forgotPassword',
         name: 'forgot-password',

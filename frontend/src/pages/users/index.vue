@@ -1,5 +1,4 @@
 <template>
-
     <div class="popular mt-3">
         <div class="container">
             <div class="trending-carousel">
@@ -9,20 +8,20 @@
                     </div>
                 </div>
 
-                <div class="d-sm-flex flex-wrap">
+                <div class="d-sm-flex  flex-wrap">
                     <div class="row">
-                        <div class="col-6 trending-card">
+                        <div class="col-sm-6 trending-card">
                             <Card />
                         </div>
-                        <div class="col-6 trending-card">
+                        <div class="col-sm-6 trending-card">
                             <Card />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6 trending-card">
+                        <div class="col-sm-6 trending-card">
                             <Card />
                         </div>
-                        <div class="col-6 trending-card">
+                        <div class="col-sm-6 trending-card">
                             <Card />
                         </div>
                     </div>
@@ -39,7 +38,10 @@
                         NỔI BẬT TRONG THÁNG
                     </div>
                     <span class="text-muted d-none d-sm-flex">&emsp;|&emsp;</span>
-                    <a href="#" class="text-decoration-none text-dark d-none d-sm-flex">Xem TOP 10 bài viết</a>
+                    <router-link :to="{ path: '/top-blogs', query: $route.query }">
+                        <a href="#" class="text-decoration-none text-dark d-none d-sm-flex">Xem TOP 10 bài viết</a>
+                    </router-link>
+
                 </div>
 
                 <div class="d-sm-flex flex-wrap">
@@ -75,7 +77,7 @@ export default {
 <style>
 .homepage_trending {
     width: 100%;
-    background-color: #e9e9e9;
+    background-color: #fafafa;
 }
 
 .trending-card {

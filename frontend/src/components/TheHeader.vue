@@ -3,7 +3,9 @@
         <div class="container">
             <div class="row ">
                 <div class="col-sm-8 col-6 d-sm-flex align-items-center justify-content-sm-start">
-                    <img src="../assets/vue.svg" alt="">
+
+                    <a href=""> <img src="../assets/vue.svg" alt=""></a>
+
                 </div>
                 <div class="col-sm-4 col-6 d-sm-flex align-items-center  justify-content-sm-end">
                     <router-link to="/signup" class="text-decoration-none">
