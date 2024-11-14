@@ -2,10 +2,8 @@
     <div class="header">
         <div class="container">
             <div class="row ">
-                <div class="col-sm-8 col-6 d-sm-flex align-items-center justify-content-sm-start">
-
-                    <a href=""> <img src="../assets/vue.svg" alt=""></a>
-
+                <div class="col-sm-8 col-6 d-flex align-items-center justify-content-start">
+                    <a href="/"> <img src="../assets/vue.svg" alt=""></a>
                 </div>
                 <div class="col-sm-4 col-6 d-sm-flex align-items-center  justify-content-sm-end">
                     <router-link to="/signup" class="text-decoration-none">

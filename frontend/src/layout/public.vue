@@ -1,18 +1,11 @@
 <template>
     <TheHeader />
     <div class="pages">
-        <Main />
-        <div class="row">
-            <div class="col-8">
-                <router-view></router-view>
-            </div>
-            <div class="col-4">
-                <span style="background-color: aqua;"></span>
-            </div>
-        </div>
-        <div class="container">
+        <router-view></router-view>
+        <div class="container " v-if="$route.path !== '/top-blogs'">
             <div class="row">
                 <div class="col-sm-8 col-12 mt-3 ps:pe-3 order-sm-1 order-2">
+                    <router-link to="/categories">a</router-link>
                     <TheMenu />
                 </div>
                 <div class="col-sm-4 col-12 order-sm-2 order-1">
@@ -21,7 +14,6 @@
             </div>
         </div>
     </div>
-    <router-view></router-view>
 </template>
 
 <script>

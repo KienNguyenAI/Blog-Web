@@ -2,16 +2,14 @@
     <div class="container-fluid">
         <h4 style="margin: 1.5rem 0;" class="fw-bold">CHỦ ĐỀ</h4>
         <div class="d-flex flex-wrap">
-            <!-- Hiển thị tất cả các phần tử khi màn hình lớn, hiển thị 2 phần tử đầu tiên khi màn hình nhỏ -->
             <Category v-for="(topic, index) in (isMobile ? topics.slice(0, 2) : topics)" :key="index"
                 :topicName="topic" />
 
-            <!-- Các phần tử sau sẽ được ẩn khi màn hình nhỏ -->
             <Category v-for="(topic, index) in topics.slice(2)" :key="index + 2" :topicName="topic"
                 v-show="showAll && isMobile" />
         </div>
 
-        <!-- Nút "Hiển thị thêm" chỉ hiển thị trên màn hình nhỏ -->
+
         <a-button type="primary" size="large" shape="round" class="d-sm-none d-block" v-show="isMobile && !showAll"
             @click="toggleShowAll">
             Hiển thị thêm

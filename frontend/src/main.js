@@ -14,7 +14,7 @@ import Antd from 'ant-design-vue';
 
 router.beforeEach((to, from, next) => {
     if (to.path === '/' && !to.query.sort && !to.query.page_idx) {
-        next({ path: '/', query: { sort: 'hot', page_idx: 1 } });
+        next({ path: '/', query: { sort: 'hot' } });
     } else {
         next();
     }
