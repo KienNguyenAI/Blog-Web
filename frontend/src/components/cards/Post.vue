@@ -13,7 +13,7 @@
                     Liệu có phải MỤC ĐÍCH CUỘC ĐỜI là HƯỚNG ĐẾN KHOÁI LẠC?
                 </a>
             </div>
-            <img src="../../assets/testimg.png" alt="" class="img-post">
+            <img src="@/assets/testimg.png" alt="" class="img-post">
             <div class="editor"></div>
             <div class="post-read-info d-flex mb-3">
                 <div>

@@ -64,8 +64,8 @@
 </template>
 
 <script>
-import CardVertical from '../../components/CardVertical.vue';
-import Card from '../../components/Card.vue';
+import CardVertical from '../../components/cards/CardVertical.vue';
+import Card from '../../components/cards/Card.vue';
 export default {
     components: {
         CardVertical,

@@ -37,7 +37,7 @@
 
 <script>
 import { FireOutlined, StarOutlined, HeartOutlined, CrownOutlined } from '@ant-design/icons-vue';
-import Card from './Card.vue';
+import Card from '../../components/cards/Card.vue';
 
 export default {
     components: {

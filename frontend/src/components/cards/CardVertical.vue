@@ -1,7 +1,7 @@
 <template>
     <div class="card d-flex">
         <a href="" class="thumbnail">
-            <img src="../assets/download.jpeg" alt="thumbnail" class="img-card">
+            <img src="@/assets/download.jpeg" alt="thumbnail" class="img-card">
 
         </a>
         <div class="card-bottom">
@@ -28,7 +28,7 @@
             </div>
             <div class="post-details d-flex justify-content-center align-items-center">
                 <a href="" class="me-sm-3 p-0" v-if="!isInSlider">
-                    <img src="../assets/download.jpeg" alt="Avatar" class="rounded-circle avatar">
+                    <img src="@/assets/download.jpeg" alt="Avatar" class="rounded-circle avatar">
                 </a>
                 <div class="details ms-2">
                     <div class="author mb-1">

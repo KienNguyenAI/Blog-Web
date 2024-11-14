@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-sm-8 col-12 mt-3 ps:pe-3 order-sm-1 order-2">
                     <router-link to="/categories">a</router-link>
-                    <TheMenu />
+                    <TheFeed />
                 </div>
                 <div class="col-sm-4 col-12 order-sm-2 order-1">
                     <Topic />
@@ -18,16 +18,12 @@
 
 <script>
 import TheHeader from '../components/TheHeader.vue';
-import TheMenu from '../components/TheFeed.vue';
-import Card from '../components/Card.vue';
-import Main from '../pages/users/index.vue';
+import TheFeed from '../pages/users/feed.vue';
 import Topic from '../pages/users/topic.vue';
 export default {
     components: {
         TheHeader,
-        Card,
-        TheMenu,
-        Main,
+        TheFeed,
         Topic
     },
 }

@@ -34,5 +34,5 @@
 </template>
 
 <style scoped>
-@import "../../style/login.css";
+@import "@/style/login.css";
 </style>

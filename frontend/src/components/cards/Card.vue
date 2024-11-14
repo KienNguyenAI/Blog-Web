@@ -1,7 +1,7 @@
 <template>
     <div class="card d-flex">
         <a href="" class="thumbnail">
-            <img src="../assets/download.jpeg" alt="thumbnail" class="img-card">
+            <img src="@/assets/download.jpeg" alt="thumbnail" class="img-card">
 
         </a>
         <div class="card-bottom">
@@ -35,7 +35,7 @@
             </div>
             <div class="post-details d-flex justify-content-center align-items-center ">
                 <a href="" class="me-3 p-0">
-                    <img src="../assets/download.jpeg" alt="Avatar" class="rounded-circle"
+                    <img src="@/assets/download.jpeg" alt="Avatar" class="rounded-circle"
                         style="width: 3rem; height: 3rem;">
                 </a>
                 <div class="details">
@@ -69,5 +69,5 @@
 
 
 <style scoped>
-@import "../style/card.css";
+@import url("@/style/card.css");
 </style>

@@ -60,8 +60,8 @@
 
 
 <script>
-import Card from './Card.vue';
-import CardVertical from './CardVertical.vue';
+import Card from './cards/Card.vue';
+import CardVertical from './cards/CardVertical.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 

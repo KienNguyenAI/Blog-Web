@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Category from '../../components/Category.vue';
+import Category from '../../components/TopicName.vue';
 
 export default {
     components: {
