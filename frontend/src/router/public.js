@@ -2,6 +2,7 @@ import PublicLayout from "../layout/public.vue";
 import Main from "../pages/users/index.vue";
 import topBlogs from "../pages/users/topBlogs.vue";
 import category from "../components/TheCategory.vue";
+import account from "../components/account/account.vue"
 // Login
 import login from "../pages/auth/login.vue";
 import signup from "../pages/auth/signup.vue";
@@ -28,9 +29,14 @@ const publicRoutes = [
             {
                 path: 'categories',
                 component: category,
-            }
+            },
+            {
+                path: '/account',
+                component: account,
+            },
         ]
     },
+
     // Router to login
     {
         path: '/login',

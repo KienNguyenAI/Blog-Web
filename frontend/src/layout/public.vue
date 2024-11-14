@@ -2,7 +2,8 @@
     <TheHeader />
     <div class="pages">
         <router-view></router-view>
-        <div class="container " v-if="$route.path !== '/top-blogs'">
+
+        <div class="container" v-if="!isExcludedPath">
             <div class="row">
                 <div class="col-sm-8 col-12 mt-3 ps:pe-3 order-sm-1 order-2">
                     <router-link to="/categories">a</router-link>
@@ -20,11 +21,26 @@
 import TheHeader from '../components/TheHeader.vue';
 import TheFeed from '../pages/users/feed.vue';
 import Topic from '../pages/users/topic.vue';
+
 export default {
     components: {
         TheHeader,
         TheFeed,
         Topic
     },
+    data() {
+        return {
+            excludedPaths: [
+                '/account',
+                '/top-blogs'
+            ]
+        };
+    },
+    computed: {
+
+        isExcludedPath() {
+            return this.excludedPaths.some(path => this.$route.path.includes(path));
+        }
+    }
 }
 </script>
