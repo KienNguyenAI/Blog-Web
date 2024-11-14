@@ -26,16 +26,16 @@
 
                 </div>
             </div>
-            <div class="post-details d-flex justify-content-center align-items-center ">
-                <a href="" class="me-sm-3 p-0">
+            <div class="post-details d-flex justify-content-center align-items-center">
+                <a href="" class="me-sm-3 p-0" v-if="!isInSlider">
                     <img src="../assets/download.jpeg" alt="Avatar" class="rounded-circle avatar">
                 </a>
-                <div class="details ms-2 d-">
+                <div class="details ms-2">
                     <div class="author mb-1">
-                        <a href="" class="text-decoration-none text-black fw-bold p-0 author-name">Trịnh Trần Phương
+                        <a href="" class="text-decoration-none text-black p-0 author-name">Trịnh Trần Phương
                             Tuấn</a>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between " v-if="!isInSlider">
                         <div class="create-at">17 giờ trước</div>
                     </div>
                 </div>
@@ -44,7 +44,16 @@
     </div>
 </template>
 
-
+<script>
+export default {
+    props: {
+        isInSlider: {
+            type: Boolean,
+            default: false
+        }
+    }
+}
+</script>
 <style scoped>
 .card {
     width: 100%;
@@ -128,8 +137,7 @@
     .title {
         font-size: .9375rem;
         max-height: 2rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
+
     }
 
     .avatar {
