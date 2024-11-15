@@ -2,7 +2,8 @@ import PublicLayout from "../layout/public.vue";
 import Main from "../pages/users/index.vue";
 import topBlogs from "../pages/users/topBlogs.vue";
 import category from "../components/TheCategory.vue";
-import account from "../components/account/account.vue"
+import account from "../components/account/account.vue";
+import setting from "../components/account/setting.vue";
 // Login
 import login from "../pages/auth/login.vue";
 import signup from "../pages/auth/signup.vue";
@@ -33,6 +34,10 @@ const publicRoutes = [
             {
                 path: '/account',
                 component: account,
+            },
+            {
+                path: '/account/setting',
+                component: setting,
             },
         ]
     },

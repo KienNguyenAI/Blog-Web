@@ -14,7 +14,10 @@
                             <div class="d-flex">
                                 <span class="user-name">@{{ "DinoFox" }}</span>
                             </div>
-                            <button class="profile-edit text-black">Chỉnh sửa trang cá nhân</button>
+                            <router-link to="/account/setting">
+                                <button class="profile-edit text-black">Chỉnh sửa trang cá nhân</button>
+                            </router-link>
+
                             <div class="profile-info_stats d-flex justify-content-between mt-3">
                                 <div class="item1">
                                     <div class="profile-info_stats-value fw-bold">
