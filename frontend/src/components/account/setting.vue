@@ -20,7 +20,7 @@
 
 <script>
 import settingAccount from './accountInfo.vue';
-import bioInfo from './bioInfo.vue';
+import bioInfo from './bio/bioInfo.vue';
 import seriesInfo from './seriesInfo.vue';
 import blockedUsers from './blockedUsers.vue';
 
