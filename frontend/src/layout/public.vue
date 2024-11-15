@@ -15,16 +15,19 @@
             </div>
         </div>
     </div>
+    <TheFooter />
 </template>
 
 <script>
 import TheHeader from '../components/TheHeader.vue';
+import TheFooter from '../components/TheFooter.vue';
 import TheFeed from '../pages/users/feed.vue';
 import Topic from '../pages/users/topic.vue';
 
 export default {
     components: {
         TheHeader,
+        TheFooter,
         TheFeed,
         Topic
     },

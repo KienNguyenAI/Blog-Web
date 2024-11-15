@@ -12,13 +12,6 @@ import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap/dist/css/bootstrap-utilities.min.css";
 import Antd from 'ant-design-vue';
 
-router.beforeEach((to, from, next) => {
-    if (to.path === '/' && !to.query.sort && !to.query.page_idx) {
-        next({ path: '/', query: { sort: 'hot' } });
-    } else {
-        next();
-    }
-});
 
 const app = createApp(App);
 
