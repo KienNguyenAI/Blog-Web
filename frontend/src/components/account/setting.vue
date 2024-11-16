@@ -20,7 +20,8 @@
 
 <script>
 import settingAccount from './accountInfo.vue';
-import bioInfo from './bio/bioInfo.vue';
+// import bioInfo from './bio/bioInfo.vue';
+import Bio from './bio/Bio.vue';
 import seriesInfo from './seriesInfo.vue';
 import blockedUsers from './blockedUsers.vue';
 
@@ -38,7 +39,7 @@ export default {
                 case 0:
                     return settingAccount;
                 case 1:
-                    return bioInfo;
+                    return Bio;
                 case 2:
                     return seriesInfo;
                 case 3:

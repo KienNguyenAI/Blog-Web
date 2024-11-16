@@ -7,7 +7,7 @@
                         <div class="col-sm-6"></div>
                         <div class="items col-sm-6 col-12 d-flex flex-column pt-5 align-items-center justify-content-center"
                             style="height: 100vh;">
-                            <router-link to="/user" class="mb-5">
+                            <router-link to="/" class="mb-5">
                                 <img src="../../assets/vue.svg" alt="" class="img-fluid">
                             </router-link>
                             <a-input-password size="large" placeholder="Nhập mật khẩu mới"

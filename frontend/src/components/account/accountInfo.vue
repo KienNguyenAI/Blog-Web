@@ -81,6 +81,15 @@ export default {
     components: {
         CameraOutlined
     },
+    data() {
+        return {
+            value: '',
+            day: null,
+            month: null,
+            year: null,
+            gender: '',
+        };
+    },
     methods: {
         handleImageChange(event, type) {
             const file = event.target.files[0];
