@@ -6,7 +6,7 @@ import account from "../components/account/account.vue";
 import setting from "../components/account/setting.vue";
 // Login
 import login from "../pages/auth/login.vue";
-import signup from "../pages/auth/signup.vue";
+import register from "../pages/auth/register.vue";
 import forgotPassword from "../pages/auth/forgotPassword.vue";
 import createAccount from "../pages/auth/createAccount.vue";
 import resetPassword from "../pages/auth/resetPassword.vue";
@@ -49,9 +49,9 @@ const publicRoutes = [
         component: login,
     },
     {
-        path: '/signup',
-        name: 'sign-up',
-        component: signup,
+        path: '/register',
+        name: 'register',
+        component: register,
     },
 
     {

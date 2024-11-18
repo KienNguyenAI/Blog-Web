@@ -6,7 +6,7 @@
                     <a href="/"> <img src="../assets/vue.svg" alt=""></a>
                 </div>
                 <div class="col-sm-4 col-6 d-sm-flex align-items-center justify-content-sm-end">
-                    <router-link to="/signup" class="text-decoration-none">
+                    <router-link to="/createAccount" class="text-decoration-none">
                         <span class="signin m-sm-3 d-none d-sm-flex">Đăng ký</span>
                     </router-link>
 

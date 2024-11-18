@@ -10,12 +10,7 @@
                             <router-link to="/" class="mb-5">
                                 <img src="../../assets/vue.svg" alt="" class="img-fluid">
                             </router-link>
-                            <a-input-password size="large" placeholder="Nhập mật khẩu mới"
-                                class="mb-3"></a-input-password>
-                            <a-input-password size="large" placeholder="Nhập lại mật khẩu"
-                                class="mb-3"></a-input-password>
 
-                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;">Đăng nhập</a-button>
 
                         </div>
 

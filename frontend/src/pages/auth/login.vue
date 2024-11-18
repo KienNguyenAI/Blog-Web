@@ -1,5 +1,5 @@
 <template>
-    <form action="">
+    <form action="" @submit.prevent="check">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-8 col-12">
@@ -10,10 +10,24 @@
                             <router-link to="/" class="mb-5">
                                 <img src="../../assets/vue.svg" alt="" class="img-fluid">
                             </router-link>
-                            <a-input size="large" placeholder="Tên tài khoản hoặc email" class="mb-3" />
-                            <a-input-password size="large" placeholder="Mật khẩu" class="mb-3"></a-input-password>
+                            <!-- Username or Email -->
+                            <div class="mb-3 w-100">
+                                <a-input size="large" placeholder="Tên tài khoản hoặc email" class="mb-1"
+                                    v-model:value="username_or_email"
+                                    :class="{ 'is-invalid': errors.username_or_email }" />
+                                <span v-if="errors.username_or_email" class="error-text">{{ errors.username_or_email[0]
+                                    }}</span>
+                            </div>
 
-                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;">Đăng nhập</a-button>
+                            <!-- Password -->
+                            <div class="mb-3 w-100">
+                                <a-input-password size="large" placeholder="Mật khẩu" class="mb-1"
+                                    v-model:value="password" :class="{ 'is-invalid': errors.password }" />
+                                <span v-if="errors.password" class="error-text">{{ errors.password[0] }}</span>
+                            </div>
+
+                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;"
+                                html-type="submit">Đăng nhập</a-button>
 
                             <router-link to="/forgotPassword"
                                 class="p-0 text-decoration-none mb-3 text-start w-100 text-primary">
@@ -21,7 +35,7 @@
                             </router-link>
 
                             <span class="mb-3 text-start w-100" style="color: #4d4d4d;">Chưa có tài khoản?
-                                <router-link to="/signup" class="text-decoration-none ">
+                                <router-link to="/createAccount" class="text-decoration-none ">
                                     <a class="text-primary text-decoration-none">Đăng ký ngay</a>
                                 </router-link>
                             </span>
@@ -34,6 +48,64 @@
     </form>
 </template>
 
+<script>
+import { reactive, toRefs, ref } from 'vue';
+import { notification } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
+
+export default {
+    setup() {
+        const router = useRouter();
+        const users = reactive({
+            username_or_email: "",
+            password: "",
+        });
+
+        const errors = ref({});
+
+        const check = () => {
+            axios.post('http://127.0.0.1:8000/api/login', users)
+                .then((response) => {
+                    notification.success({
+                        message: `Đăng nhập thành công`,
+                        duration: 1,
+                        style: {
+                            backgroundColor: '#f6ffed',
+                        }
+                    });
+                    setTimeout(() => {
+                        router.push('/');
+                    }, 1000);
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data.errors) {
+                        errors.value = error.response.data.errors;
+                    } else {
+                        errors.value = { username_or_email: ['Tên tài khoản hoặc email không đúng'], password: ['Mật khẩu không đúng'] };
+                    }
+                });
+        };
+
+        return {
+            check,
+            ...toRefs(users),
+            errors
+        };
+    }
+};
+</script>
+
 <style scoped>
 @import "@/style/login.css";
+
+.is-invalid {
+    border: 1px solid red !important;
+}
+
+.error-text {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    display: block;
+}
 </style>

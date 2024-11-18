@@ -1,5 +1,5 @@
 <template>
-    <form action="">
+    <form action="" @submit.prevent="check()">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-8 col-12">
@@ -10,38 +10,45 @@
                             <router-link to="/" class="mb-5">
                                 <img src="../../assets/vue.svg" alt="" class="img-fluid">
                             </router-link>
-                            <!-- User information -->
-                            <a-input size="large" placeholder="Tên đăng nhập" class="mb-3" />
-                            <a-input size="large" placeholder="Tên hiển thị" class="mb-3" />
+                            <div class="mb-3 w-100">
+                                <a-input size="large" placeholder="email@example.com" class="mb-1" v-model:value="email"
+                                    :class="{ 'is-invalid': errors.email }" />
+                                <span v-if="errors.email" class="error-text">{{ errors.email[0] }}</span>
+                            </div>
+                            <!-- Username -->
+                            <div class="mb-3 w-100">
+                                <a-input size="large" placeholder="Tên đăng nhập" class="mb-1" v-model:value="username"
+                                    :class="{ 'is-invalid': errors.username }" />
+                                <span v-if="errors.username" class="error-text">{{ errors.username[0] }}</span>
+                            </div>
+                            <!-- Display Name -->
+                            <div class="mb-3 w-100">
+                                <a-input size="large" placeholder="Tên hiển thị" class="mb-1" v-model:value="name"
+                                    :class="{ 'is-invalid': errors.name }" />
+                                <span v-if="errors.name" class="error-text">{{ errors.name[0] }}</span>
+                            </div>
                             <!-- Password -->
-                            <a-input-password size="large" placeholder="Mật khẩu" class="mb-3"></a-input-password>
-                            <a-input-password size="large" placeholder="Nhập lại mật khẩu"
-                                class="mb-3"></a-input-password>
+                            <div class="mb-3 w-100">
+                                <a-input-password size="large" placeholder="Mật khẩu tối thiểu 8 ký tự" class="mb-1"
+                                    v-model:value="password" :class="{ 'is-invalid': errors.password }" />
+                                <span v-if="errors.password" class="error-text">{{ errors.password[0] }}</span>
+                            </div>
+                            <!-- Password Confirmation -->
+                            <div class="mb-3 w-100">
+                                <a-input-password size="large" placeholder="Nhập lại mật khẩu" class="mb-1"
+                                    v-model:value="password_confirmation"
+                                    :class="{ 'is-invalid': errors.password_confirmation }" />
+                                <span v-if="errors.password_confirmation" class="error-text">{{
+                                    errors.password_confirmation[0] }}</span>
+                            </div>
 
-
-                            <a-collapse style="width: 100%;">
-                                <a-collapse-panel header="Nhấn vào để thêm input">
-                                    <!-- Sử dụng thuộc tính block để nút full chiều ngang -->
-                                    <a-button size="large" @click="showInputs = !showInputs" block class="mb-3"
-                                        style="background-color: #f2f2f2;">
-                                        Thêm thông tin khác
-                                    </a-button>
-                                    <transition name="slide-down">
-                                        <div v-if="showInputs">
-                                            <a-form-item label="Input 1">
-                                                <a-input size="large" placeholder="Số điện thoại" class="mb-3" />
-                                            </a-form-item>
-                                            <a-form-item label="Input 2">
-                                                <a-input size="large" placeholder="Số chứng minh nhân dân"
-                                                    class="mb-3" />
-                                            </a-form-item>
-                                        </div>
-                                    </transition>
-                                </a-collapse-panel>
-                            </a-collapse>
-
-                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;">Đăng ký</a-button>
-
+                            <span class="mb-3 text-start w-100" style="color: #4d4d4d;">Đã có tài khoản?
+                                <router-link to="/login" class="text-decoration-none">
+                                    <a class="text-primary text-decoration-none">Đăng nhập</a>
+                                </router-link>
+                            </span>
+                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;"
+                                html-type="submit">Đăng ký</a-button>
                         </div>
                     </div>
                 </div>
@@ -52,19 +59,62 @@
 
 
 <script>
-import { ref } from 'vue';
-
+import { reactive, toRefs, ref } from 'vue';
+import { notification } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
 export default {
     setup() {
-        const showInputs = ref(false);
-        const input1 = ref('');
-        const input2 = ref('');
+        const router = useRouter();
+        const users = reactive({
+            email: "",
+            username: "",
+            name: "",
+            password: "",
+            password_confirmation: ""
+        })
+        const errors = ref({
+        });
+        const check = () => {
+            axios.post('http://127.0.0.1:8000/api/register', users)
+                .then((response) => {
+                    notification.success({
+                        message: `Tạo tài khoản thành công`,
+                        duration: 1,
+                        style: {
+                            backgroundColor: '#f6ffed',
+                        }
+                    });
+                    setTimeout(() => {
+                        router.push('/');
+                    }, 1000);
+                })
+                .catch((error) => {
+                    errors.value = error.response.data.errors;
 
-        return { showInputs, input1, input2 };
+                })
+        }
+
+        return {
+            check,
+            ...toRefs(users),
+            errors
+        }
+
     }
 };
 </script>
 
 <style scoped>
 @import "@/style/login.css";
+
+.is-invalid {
+    border: 1px solid red !important;
+}
+
+.error-text {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    display: block;
+}
 </style>
