@@ -11,7 +11,7 @@
         </div>
 
         <a-button type="primary" size="large" shape="round" class="d-sm-none d-block" v-show="isMobile && !showAll"
-            @click="toggleShowAll">
+            @click="toggleShowAll" style="background-color: #ff7919;">
             Hiển thị thêm
         </a-button>
     </div>

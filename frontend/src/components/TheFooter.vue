@@ -2,9 +2,9 @@
     <div class="container-fluid footer p-0 mt-5">
         <div class="container footer-container">
             <div class="footer-header d-flex">
-                <a href="" class="ps-0"> <i class="fa-brands fa-facebook fa-lg " style="color: #009dff;"></i></a>
-                <a href=""><i class="fa-brands fa-google fa-lg " style="color: #009dff;"></i></a>
-                <a href=""><i class="fa-brands fa-github fa-lg" style="color: #009dff;"></i></a>
+                <a href="" class="ps-0"> <i class="fa-brands fa-facebook fa-lg " style="color: #ff7919;"></i></a>
+                <a href=""><i class="fa-brands fa-google fa-lg " style="color: #ff7919;"></i></a>
+                <a href=""><i class="fa-brands fa-github fa-lg" style="color: #ff7919;"></i></a>
             </div>
             <div class="footer-description mt-4">
                 FoxTales là web chia sẻ kiến thức, nơi người dùng đăng bài, thảo luận và học hỏi từ cộng đồng về
@@ -43,7 +43,7 @@
 }
 
 .footer-phone {
-    color: #009dff;
+    color: #ff7919;
     text-decoration: none;
     font-weight: bold;
 }

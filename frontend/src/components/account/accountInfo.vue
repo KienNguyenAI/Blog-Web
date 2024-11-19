@@ -189,11 +189,11 @@ input[type="file"] {
 }
 
 .submit .save {
-    background-color: #4096ff;
+    background-color: #ff9549;
     color: white;
 }
 
 .submit .save:hover {
-    background-color: #3182ce;
+    background-color: #ff7919;
 }
 </style>

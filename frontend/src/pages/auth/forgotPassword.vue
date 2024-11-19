@@ -8,7 +8,8 @@
                         <div class="items col-sm-6 col-12 d-flex flex-column pt-5 align-items-center justify-content-center"
                             style="height: 100vh;">
                             <router-link to="/" class="mb-5">
-                                <img src="../../assets/vue.svg" alt="" class="img-fluid" />
+                                <img src="../../assets/foxtalesLogo.webp" alt="" class="img-fluid"
+                                    style="width: 10rem;">
                             </router-link>
 
                             <span class="mb-3 text-start w-100" style="color: #4d4d4d; font-size: 0.85rem;">Vui lòng
@@ -34,7 +35,8 @@
                                     errors.password_confirmation[0] }}</span>
                             </div>
 
-                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;" html-type="submit">
+                            <a-button size="large" type="primary" class="mb-3"
+                                style="width: 100%;background-color: #ff7919;" html-type="submit">
                                 Đổi mật khẩu
                             </a-button>
                         </div>

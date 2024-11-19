@@ -8,7 +8,8 @@
                         <div class="items col-sm-6 col-12 d-flex flex-column pt-5 align-items-center justify-content-center"
                             style="height: 100vh;">
                             <router-link to="/" class="mb-5">
-                                <img src="../../assets/vue.svg" alt="" class="img-fluid">
+                                <img src="../../assets/foxtalesLogo.webp" alt="" class="img-fluid"
+                                    style="width: 10rem;">
                             </router-link>
                             <!-- Username or Email -->
                             <div class="mb-3 w-100">
@@ -26,8 +27,8 @@
                                 <span v-if="errors.password" class="error-text">{{ errors.password[0] }}</span>
                             </div>
 
-                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;"
-                                html-type="submit">Đăng nhập</a-button>
+                            <a-button size="large" type="primary" class="mb-3"
+                                style="width: 100%; background-color: #ff7919;" html-type="submit">Đăng nhập</a-button>
 
                             <router-link to="/forgotPassword"
                                 class="p-0 text-decoration-none mb-3 text-start w-100 text-primary">

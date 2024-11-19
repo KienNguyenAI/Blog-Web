@@ -8,7 +8,8 @@
                         <div class="items col-sm-6 col-12 d-flex flex-column pt-5 align-items-center justify-content-center"
                             style="height: 100vh;">
                             <router-link to="/" class="mb-5">
-                                <img src="../../assets/vue.svg" alt="" class="img-fluid">
+                                <img src="../../assets/foxtalesLogo.webp" alt="" class="img-fluid"
+                                    style="width: 10rem;">
                             </router-link>
                             <div class="mb-3 w-100">
                                 <a-input size="large" placeholder="email@example.com" class="mb-1" v-model:value="email"
@@ -47,8 +48,8 @@
                                     <a class="text-primary text-decoration-none">Đăng nhập</a>
                                 </router-link>
                             </span>
-                            <a-button size="large" type="primary" class="mb-3" style="width: 100%;"
-                                html-type="submit">Đăng ký</a-button>
+                            <a-button size="large" type="primary" class="mb-3"
+                                style="width: 100%; background-color: #ff7919;" html-type="submit">Đăng ký</a-button>
                         </div>
                     </div>
                 </div>

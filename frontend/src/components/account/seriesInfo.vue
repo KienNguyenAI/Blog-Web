@@ -74,16 +74,16 @@ export default {
 }
 
 .submit-series .create-series {
-    background-color: #4096ff;
+    background-color: #ff7919;
     color: white;
 }
 
 .submit-series .create-series:hover {
-    background-color: #3182ce;
+    background-color: #da5600;
 }
 
 .confirm {
-    background-color: #4096ff;
+    background-color: #ff7919;
     color: white;
     padding: 1rem;
     padding-left: 1.5rem;
@@ -95,6 +95,6 @@ export default {
 }
 
 .confirm:hover {
-    background-color: #3182ce;
+    background-color: #da5600;
 }
 </style>

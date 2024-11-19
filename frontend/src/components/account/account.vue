@@ -6,22 +6,29 @@
                     <div class="profile-left p-4">
                         <div class="profile-content">
                             <div class="avatar-container">
-                                <img src="@/assets/download.jpeg" alt="Avatar" class="avatar-user rounded-circle">
+                                <img :src="getAvatar(user.avatar)" alt="Avatar" class="avatar-user rounded-circle">
                             </div>
                             <div class="mt-3 d-flex mt-3">
-                                <span class="display-name">DinoFox</span>
+                                <span class="display-name">{{ user.name }}</span>
                             </div>
                             <div class="d-flex">
-                                <span class="user-name">@{{ "DinoFox" }}</span>
+                                <span class="user-name">@{{ user.username }}</span>
                             </div>
-                            <router-link to="/account/setting">
+                            <router-link to="/account/setting" class="p-0" v-if="showEditProfile">
                                 <button class="profile-edit text-black">Chỉnh sửa trang cá nhân</button>
                             </router-link>
-
+                            <a-button type="primary" size="large" class="w-100 border-0 mt-3"
+                                style="background-color: #e0f2fe;" ghost v-if="showFollowButton"
+                                @click="followUser">Theo dõi</a-button>
+                            <a-button type="primary" size="large" class="w-100 border-0 mt-3"
+                                style="background-color: #e0f2fe;" ghost v-if="!showEditProfile && !showFollowButton"
+                                @click="unfollowUser">
+                                Đang theo dõi
+                            </a-button>
                             <div class="profile-info_stats d-flex justify-content-between mt-3">
                                 <div class="item1">
                                     <div class="profile-info_stats-value fw-bold">
-                                        0
+                                        {{ user.followers }}
                                     </div>
                                     <div class="profile-info_stats-text">
                                         followers
@@ -29,7 +36,7 @@
                                 </div>
                                 <div class="item2">
                                     <div class="profile-info_stats-value fw-bold">
-                                        0
+                                        {{ user.following }}
                                     </div>
                                     <div class="profile-info_stats-text">
                                         following
@@ -63,7 +70,7 @@
                                 <a class="ant-dropdown" @click.prevent>
                                     <i class="fa-solid fa-ellipsis-vertical p-3"
                                         style="cursor: pointer; color: #898989;"></i>
-                                    <DownOutlined />
+                                    <!-- <DownOutlined /> -->
                                 </a>
                                 <template #overlay>
                                     <a-menu>
@@ -89,15 +96,135 @@
 </template>
 
 <script>
+import { notification } from 'ant-design-vue';
 export default {
+
     data() {
         return {
             activeTab: 'post',
+            user: {
+                name: '',
+                username: '',
+                avatar: '',
+                followers: 0,
+                following: 0,
+            },
+            showEditProfile: false,
+            showFollowButton: true
         };
+    },
+    mounted() {
+        const username = this.$route.params.username;
+        this.fetchUserData(username);
+    },
+    watch: {
+        '$route.params.username': 'fetchUserData',
     },
     methods: {
         setActiveTab(tab) {
             this.activeTab = tab;
+        },
+        fetchUserData(username) {
+            axios.get(`http://127.0.0.1:8000/api/user/${username}`)
+                .then(response => {
+                    if (response.data) {
+                        const user = JSON.parse(localStorage.getItem('user'));
+
+                        const userData = response.data[0];
+                        const followingCount = response.data.following_count;
+                        const followerCount = response.data.follower_count;
+
+                        this.user.id = userData.id;
+                        this.user.name = userData.name;
+                        this.user.username = userData.username;
+                        this.user.avatar = userData.avatar;
+                        this.user.followers = followerCount;
+                        this.user.following = followingCount;
+
+                        if (user && user.id === userData.id) {
+                            this.showEditProfile = true;
+                            this.showFollowButton = false;
+                        } else {
+                            this.showEditProfile = false;
+                            this.showFollowButton = true;
+                            this.checkFollow();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi lấy dữ liệu người dùng', error);
+                });
+        },
+
+        followUser() {
+            const currentUser = JSON.parse(localStorage.getItem('user'));
+            const follow = {
+                follower: currentUser.id,
+                following: this.user.id
+            };
+
+            axios.post('http://127.0.0.1:8000/api/follow', follow)
+                .then((response) => {
+
+                    if (response.data.message === 'Followed successfully') {
+                        this.checkFollow();
+                        this.user.followers += 1;
+                        notification.success({
+                            message: `Đã theo dõi người viết`,
+                            duration: 1,
+                            style: {
+                                backgroundColor: '#f6ffed',
+                            }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Lỗi khi thực hiện follow:', error);
+                });
+        },
+        unfollowUser() {
+            const currentUser = JSON.parse(localStorage.getItem('user'));
+            const follow = {
+                follower: currentUser.id,
+                following: this.user.id
+            };
+
+            axios.post('http://127.0.0.1:8000/api/unfollow', follow)
+                .then((response) => {
+                    if (response.data.message === 'Unfollowed successfully') {
+                        this.user.followers -= 1;
+                        this.showFollowButton = true;
+                        notification.success({
+                            message: `Đã hủy theo dõi người viết`,
+                            duration: 1,
+                            style: {
+                                backgroundColor: '#f6ffed',
+                            }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Lỗi khi thực hiện unfollow:', error);
+                });
+        },
+        checkFollow() {
+            const currentUser = JSON.parse(localStorage.getItem('user'));
+            const follow = {
+                follower: currentUser.id,
+                following: this.user.id
+            };
+
+            axios.post('http://127.0.0.1:8000/api/checkFollow', follow)
+                .then(response => {
+                    this.showFollowButton = !response.data.isFollowing;
+                })
+                .catch(error => {
+                    console.error("Error checking follow status:", error);
+                });
+        },
+        getAvatar(avatar) {
+
+            return avatar ? avatar : '/avatars/default.webp';
         },
     },
 };
@@ -131,7 +258,7 @@ export default {
     background-color: #f9f9f9;
 }
 
-.profile-content button {
+.profile-content .profile-edit {
     width: 100%;
     padding-top: .75rem;
     padding-bottom: .75rem;
@@ -143,7 +270,7 @@ export default {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-.profile-content button:hover {
+.profile-content .profile-edit:hover {
     cursor: pointer;
     background-color: #dfdfdf;
 }
@@ -174,21 +301,21 @@ export default {
 }
 
 .profile-tabs .item.active .icon {
-    color: #0090d4;
+    color: #ff7919;
 }
 
 .profile-tabs .item.active .text {
-    color: #0090d4;
+    color: #ff7919;
 }
 
 .profile-tabs .item.active {
-    border-bottom: 3px solid #0090d4;
+    border-bottom: 3px solid #ff7919;
     padding-bottom: 10px;
 }
 
 .profile-tabs .item:hover .text,
 .profile-tabs .item:hover .icon {
-    color: #0090d4;
+    color: #ff7919;
 }
 
 @media (max-width: 992px) {

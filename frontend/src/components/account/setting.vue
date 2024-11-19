@@ -72,13 +72,13 @@ export default {
 }
 
 .mod-tab li.active {
-    color: #0090d4;
-    border-left: 3px solid #0090d4;
+    color: #ff7919;
+    border-left: 3px solid #ff7919;
     padding-bottom: 10px;
     font-weight: bold;
 }
 
 .mod-tab li:hover {
-    color: #0090d4;
+    color: #ff7919;
 }
 </style>

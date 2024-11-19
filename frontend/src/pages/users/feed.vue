@@ -79,7 +79,7 @@ a {
 }
 
 .custom-title {
-    border-left: 3px solid #0090d4;
+    border-left: 3px solid #ff7919;
     font-weight: bold;
     padding-left: 10px;
 }
@@ -101,15 +101,15 @@ a {
 }
 
 .item.active .icon {
-    color: #0090d4;
+    color: #ff7919;
 }
 
 .item.active .text {
-    color: #0090d4;
+    color: #ff7919;
 }
 
 .item.active {
-    border-bottom: 3px solid #0090d4;
+    border-bottom: 3px solid #ff7919;
     padding-bottom: 10px;
 }
 
@@ -117,6 +117,7 @@ a {
     margin-top: 3rem;
 }
 
+/* màu blue #0090d4 */
 @media (max-width: 768px) {
     .filter {
         display: none;

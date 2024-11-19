@@ -20,18 +20,18 @@
                 <CaretDownOutlined style="font-size: .5rem;" />
             </div>
             <template #overlay>
-                <a-card class="card-dropdown " :style="cardStyle">
+                <a-card class="card-dropdown " style="width: 300px;">
                     <div class="nav-user-details  mb-3">
                         <img :src="getAvatar(user.avatar)" alt="" class="user-avatar me-3">
                         <div class="user-info w-100">
                             <div class=" d-flex">
-                                <span class="display-name">{{ user.username }}</span>
+                                <span class="display-name">{{ user.name }}</span>
                             </div>
                             <div class="d-flex">
-                                <span class="user-name">@{{ user.name }}</span>
+                                <span class="user-name">@{{ user.username }}</span>
                             </div>
 
-                            <router-link to="/account">
+                            <router-link :to="`/account/${user.username}`" class="p-0">
                                 <button class="view-profile-button mt-1 text-black">
                                     Xem trang cá nhân
                                 </button>
@@ -72,10 +72,11 @@
 
 <script>
 import { CaretDownOutlined } from '@ant-design/icons-vue';
-
+import { isLoggedIn, getUser, logout } from '../services/auth';
 export default {
     components: {
         CaretDownOutlined,
+
     },
     props: {
         showShadow: {
@@ -95,18 +96,14 @@ export default {
     methods: {
 
         checkLoginStatus() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user) {
-                this.isLoggedIn = true;
-                this.user = user;
-            } else {
-                this.isLoggedIn = false;
-                this.user = null;
+            this.isLoggedIn = isLoggedIn();
+            if (this.isLoggedIn) {
+                this.user = getUser();
             }
-
         },
+
         logout() {
-            localStorage.removeItem('user');
+            logout();
             this.isLoggedIn = false;
             this.user = null;
         },
@@ -124,14 +121,14 @@ export default {
     padding: 0.75rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    background-color: #00aaff;
+    background-color: #ff7919;
     color: white;
     font-size: 1.1rem;
     border-radius: 1.45rem;
 }
 
 .login:hover {
-    background-color: #0087ca;
+    background-color: #da5600;
 }
 
 .signin {
@@ -139,9 +136,6 @@ export default {
     font-size: 1.1rem;
 }
 
-.card-dropdown {
-    width: 300px;
-}
 
 .nav-user-details {
     display: flex;

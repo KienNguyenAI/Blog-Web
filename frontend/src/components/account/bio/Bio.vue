@@ -33,7 +33,7 @@ export default {
 
 <style>
 .save {
-    background-color: #4096ff;
+    background-color: #ff7919;
     color: white;
     padding: 1rem;
     padding-left: 1.5rem;
@@ -45,6 +45,6 @@ export default {
 }
 
 .save:hover {
-    background-color: #3182ce;
+    background-color: #da5600;
 }
 </style>

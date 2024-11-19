@@ -32,7 +32,8 @@ const publicRoutes = [
                 component: category,
             },
             {
-                path: '/account',
+                path: '/account/:username',
+                name: 'account',
                 component: account,
             },
             {
