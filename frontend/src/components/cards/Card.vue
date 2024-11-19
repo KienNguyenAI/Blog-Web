@@ -35,7 +35,7 @@
             </div>
             <div class="post-details d-flex justify-content-center align-items-center ">
                 <a href="" class="me-3 p-0">
-                    <img src="@/assets/download.jpeg" alt="Avatar" class="rounded-circle"
+                    <img src="@/assets/avatars/default.webp" alt="Avatar" class="rounded-circle"
                         style="width: 3rem; height: 3rem;">
                 </a>
                 <div class="details">

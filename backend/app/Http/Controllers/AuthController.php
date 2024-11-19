@@ -34,13 +34,20 @@ class AuthController extends Controller
             'password.confirmed' => 'Mật khẩu và xác nhận mật khẩu không khớp',
         ]);
 
-        User::create([
+        // Tạo người dùng mới
+        $user = User::create([
+            'avatar' => '',
             'email' => $validated['email'],
             'username' => $validated['username'],
             'name' => $validated['name'],
             'password' => Hash::make($validated['password']),
             'roles_id' => "3"
         ]);
+
+        return response()->json([
+            'message' => 'Tạo tài khoản thành công',
+            'user' => $user,
+        ], 201);
     }
     public function login(Request $request)
     {

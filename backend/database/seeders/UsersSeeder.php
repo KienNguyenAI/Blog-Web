@@ -12,7 +12,7 @@ class UsersSeeder extends Seeder
     {
         // Tạo người dùng
         $user = DB::table('users')->insertGetId([
-            'avatar' => '',
+            'avatar' => '/avatars/admin.webp',
             'username' => 'admin',
             'name' => 'Administrator',
             'email' => 'admin@example.com',

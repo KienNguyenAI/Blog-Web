@@ -73,9 +73,9 @@ export default {
                             backgroundColor: '#f6ffed',
                         }
                     });
-                    setTimeout(() => {
-                        router.push('/');
-                    }, 1000);
+                    localStorage.setItem('user', JSON.stringify(response.data.user));
+                    router.push('/');
+
                 })
                 .catch((error) => {
                     if (error.response && error.response.data.errors) {

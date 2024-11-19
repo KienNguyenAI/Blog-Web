@@ -6,13 +6,7 @@
                     <a href="/"> <img src="../assets/vue.svg" alt=""></a>
                 </div>
                 <div class="col-sm-4 col-6 d-sm-flex align-items-center justify-content-sm-end">
-                    <router-link to="/createAccount" class="text-decoration-none">
-                        <span class="signin m-sm-3 d-none d-sm-flex">Đăng ký</span>
-                    </router-link>
-
-                    <router-link to="/login" class="text-decoration-none">
-                        <span class="login d-flex justify-content-center">Đăng nhập</span>
-                    </router-link>
+                    <HeaderRight />
                 </div>
             </div>
         </div>
@@ -20,13 +14,18 @@
 </template>
 
 <script>
+import HeaderRight from './HeaderRight.vue';
 export default {
+    components: {
+        HeaderRight
+    },
     props: {
         showShadow: {
             type: Boolean,
             default: true
         }
-    }
+    },
+
 }
 </script>
 
