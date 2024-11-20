@@ -35,7 +35,7 @@ export default {
         return {
             excludedPaths: [
                 '/account',
-                '/top-blogs'
+                '/top-blogs',
             ]
         };
     },

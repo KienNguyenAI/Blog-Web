@@ -4,6 +4,7 @@ import topBlogs from "../pages/users/topBlogs.vue";
 import category from "../components/TheCategory.vue";
 import account from "../components/account/account.vue";
 import setting from "../components/account/setting.vue";
+import createPost from "../pages/users/post/createPost.vue";
 // Login
 import login from "../pages/auth/login.vue";
 import register from "../pages/auth/register.vue";
@@ -40,7 +41,12 @@ const publicRoutes = [
                 path: '/account/setting',
                 component: setting,
             },
+
         ]
+    },
+    {
+        path: '/post',
+        component: createPost,
     },
 
     // Router to login

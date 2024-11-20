@@ -11,8 +11,11 @@
     </div>
 
 
-    <div v-if="isLoggedIn" class="d-flex justify-content-end">
-
+    <div v-if="isLoggedIn" class="d-flex justify-content-end ">
+        <router-link class=" write-button me-1 ms-1" to="/post">
+            <i class="fa-solid fa-feather me-2"></i>
+            <span>Viết bài</span>
+        </router-link>
         <a-dropdown trigger="click">
             <div class="ant-dropdown-link" style="cursor: pointer;">
                 <img :src="getAvatar(user.avatar)" alt="Avatar" class="rounded-circle"
@@ -186,5 +189,19 @@ export default {
 .nav-user-contents .content span {
     font-size: 1.1rem;
     color: black
+}
+
+.write-button {
+
+    color: black;
+    padding: .7rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border: 1.5px solid #eaeaef;
+    border-radius: 1.5rem;
+}
+
+.write-button:hover {
+    background-color: #eaeaef;
 }
 </style>
