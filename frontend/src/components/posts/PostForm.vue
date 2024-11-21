@@ -7,16 +7,43 @@
                 <CeBlock />
             </div>
         </div>
+        <div class="next-step">
+            <!-- Nút mở modal -->
+            <button class="button" @click="showModal">Bước tiếp theo</button>
+
+            <!-- Modal -->
+            <a-modal v-model:open="open" @ok="handleOk" ok-text="Tạo" cancel-text="Quay lại">
+                <div>
+                    <label for="" class="fw-bold">Mô tả bài viết </label>
+                </div>
+            </a-modal>
+        </div>
     </div>
 </template>
 
 
+
 <script>
 import CeBlock from './CeBlock.vue';
+
 export default {
     components: {
         CeBlock,
     },
+    data() {
+        return {
+            open: false,
+        };
+    },
+    methods: {
+        showModal() {
+            this.open = true;
+        },
+        handleOk() {
+            this.open = false;
+        },
+    },
+
 }
 </script>
 <style scoped>
@@ -40,15 +67,27 @@ export default {
     color: #aaa;
 }
 
-.ce-paragraph {
-    outline: none;
-    padding: .475rem 0;
-    font-size: 1.2rem;
-    margin-bottom: 1.25rem;
+.next-step {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+    z-index: 1000;
 }
 
-.cdx-block[placeholder]:empty::before {
-    content: attr(placeholder);
-    color: #aaa;
+.next-step .button {
+    cursor: pointer;
+    padding: .5rem 1.5rem;
+    color: white;
+    background-color: #ff7919;
+    border: 0;
+    border-radius: .25rem;
+}
+
+.next-step .button:hover {
+    background-color: #da5600;
 }
 </style>
