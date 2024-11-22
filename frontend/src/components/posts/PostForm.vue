@@ -1,51 +1,133 @@
 <template>
-    <div class="post-form">
-        <div class="title" contenteditable="true" @input="handleInput" placeholder="Tiêu đề bài viết.....">
-        </div>
-        <div class="editor">
-            <div class="codex-editor">
-                <CeBlock />
+    <form action="" @submit.prevent="upPosts">
+        <div class="post-form">
+            <div class="title" contenteditable="true" @input="handleInput" :text-content="title"
+                placeholder="Tiêu đề bài viết.....">
+            </div>
+
+
+            <div class="editor">
+                <div class="codex-editor " style="padding-bottom: 20rem;">
+                    <CeBlock ref="ceBlockRef" />
+
+                </div>
+            </div>
+            <div class="next-step">
+
+
+                <!-- Nút mở modal -->
+                <button type="button" class="button" @click="showModal">Bước tiếp theo</button>
+
+                <!-- Modal -->
+                <a-modal v-model:open="open">
+                    <div>
+                        <label for="" class="fw-bold">Mô tả bài viết </label>
+                        <a-textarea v-model:value="description" :rows="4" />
+                    </div>
+                    <template #footer>
+                        <div class="d-flex justify-content-center align-items-center modal-footer">
+                            <button type="button" @click="open = false" class="btn-cancel me-3">Quay lại</button>
+                            <button @click="upPosts" class="btn-create">Tạo</button>
+
+
+                        </div>
+                    </template>
+                </a-modal>
             </div>
         </div>
-        <div class="next-step">
-            <!-- Nút mở modal -->
-            <button class="button" @click="showModal">Bước tiếp theo</button>
-
-            <!-- Modal -->
-            <a-modal v-model:open="open" @ok="handleOk" ok-text="Tạo" cancel-text="Quay lại">
-                <div>
-                    <label for="" class="fw-bold">Mô tả bài viết </label>
-                </div>
-            </a-modal>
-        </div>
-    </div>
+    </form>
 </template>
-
+<!-- this.$refs.ceBlock.getAllContent(); -->
 
 
 <script>
 import CeBlock from './CeBlock.vue';
+import { reactive, toRefs, ref } from 'vue';
+import { getUser } from '../../services/auth';
+import { notification } from 'ant-design-vue';
 
 export default {
     components: {
         CeBlock,
     },
+
+    setup() {
+        const ceBlockRef = ref(null);
+        const handleInput = (event) => {
+            post.title = event.target.innerText.trim(); // Cập nhật giá trị title
+        };
+        const post = reactive({
+            title: '',
+            content: '',
+            description: '',
+            image: '',
+            status: 'published',
+            users_id: getUser().id
+        });
+
+
+        const upPosts = () => {
+
+            // Lấy dữ liệu từ CeBlock
+            const contentData = ceBlockRef.value.getAllContent();
+
+            if (!contentData || contentData.length === 0) {
+                notification.error({
+                    message: 'Nội dung không được để trống',
+                    duration: 2,
+                });
+                return;
+            }
+
+            const imageItem = contentData.find(item => typeof item === 'object' && item.src);
+            post.image = imageItem ? imageItem.src : '';
+            post.content = JSON.stringify(contentData);
+
+            // Gửi API
+            axios.post('http://127.0.0.1:8000/api/posts', post)
+                .then((response) => {
+                    console.log('Response:', response.data);
+                    notification.success({
+                        message: 'Bài viết đã được tạo thành công!',
+                        duration: 2,
+                        style: { backgroundColor: '#f6ffed' },
+                    });
+                })
+                .catch((error) => {
+                    const errors = error.response.data.errors;
+                    const errorMessage = errors.title?.[0] || errors.content?.[0] || 'Đã xảy ra lỗi';
+                    notification.error({
+                        message: errorMessage,
+                        duration: 2,
+                        style: { backgroundColor: '#ffc7c4' },
+                    });
+                });
+        };
+
+        return {
+            ceBlockRef,
+            upPosts,
+            handleInput,
+            ...toRefs(post),
+        };
+    },
+
+    methods: {
+
+        showModal() {
+            this.open = true;
+        },
+
+    },
+
     data() {
         return {
             open: false,
         };
     },
-    methods: {
-        showModal() {
-            this.open = true;
-        },
-        handleOk() {
-            this.open = false;
-        },
-    },
-
-}
+};
 </script>
+
 <style scoped>
 .post-form {
     padding: 25px 30px;
@@ -89,5 +171,35 @@ export default {
 
 .next-step .button:hover {
     background-color: #da5600;
+}
+
+.modal-footer {
+    padding: 1rem 0;
+}
+
+.modal-footer button {
+    border: 1.5px solid #eaeaef;
+    width: 7rem;
+    padding: .5rem;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.modal-footer .btn-cancel {
+    background-color: white;
+}
+
+.modal-footer .btn-cancel:hover {
+    background-color: #eaeaef;
+}
+
+.modal-footer .btn-create {
+    background-color: #ff7919;
+    color: white;
+}
+
+.modal-footer .btn-create:hover {
+    background-color: #da5600;
+
 }
 </style>

@@ -12,7 +12,7 @@
 
 
     <div v-if="isLoggedIn" class="d-flex justify-content-end ">
-        <router-link class=" write-button me-1 ms-1" to="/post">
+        <router-link class=" write-button me-1 ms-1" to="/post/write">
             <i class="fa-solid fa-feather me-2"></i>
             <span>Viết bài</span>
         </router-link>

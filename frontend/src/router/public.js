@@ -45,7 +45,7 @@ const publicRoutes = [
         ]
     },
     {
-        path: '/post',
+        path: '/post/write',
         component: createPost,
     },
 

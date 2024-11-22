@@ -25,12 +25,12 @@
                         <div class="img-tool " v-if="blocks[index].isImageUploaded">
                             <a-dropdown :trigger="['click']">
                                 <div class="img-tool_img ant-dropdown-link">
-                                    <img :src="blocks[index].content" alt="Preview" class="mb-1">
+                                    <img :src="blocks[index].content" alt="Uploaded Image" class="mb-1">
                                 </div>
                                 <template #overlay>
                                     <a-menu>
                                         <a-menu class="d-flex flex-column align-items-center p-2">
-                                            <span> <i class="fa-solid fa-x close" @click="removeImage(index)"></i>
+                                            <span> <i class="fa-solid fa-x close" @click="deleteImage(index)"></i>
                                             </span>
 
                                         </a-menu>
@@ -142,6 +142,32 @@ export default {
         };
     },
     methods: {
+        getAllContent() {
+            const contents = Array.from(this.$el.querySelectorAll('.ce-block__content'));
+
+            return contents.map((content, index) => {
+                const clone = content.cloneNode(true);
+                const buttons = clone.querySelector('.add-block-buttons');
+                if (buttons) {
+                    buttons.remove();
+                }
+
+
+                const block = this.blocks[index];
+                if (block.type === 'image') {
+                    const imgSrc = block.content;
+                    const captionEl = clone.querySelector('.caption');
+                    const caption = captionEl ? captionEl.innerText.trim() : '';
+                    return {
+                        src: imgSrc,
+                        caption: caption,
+                    };
+                }
+
+                return clone.innerHTML.trim();
+            });
+        },
+
         setActiveBlock(index) {
             this.activeBlockIndex = index;
         },
@@ -161,24 +187,59 @@ export default {
             }
         },
         triggerFileInput(index) {
-            // Tìm thẻ input file và kích hoạt nó
-            const fileInput = this.$el.querySelectorAll('.file-input')[index];
-            if (fileInput) fileInput.click();
+
+            const block = this.$el.querySelectorAll('.ce-block')[index];
+            if (block) {
+                const fileInput = block.querySelector('.file-input');
+                if (fileInput) {
+                    fileInput.click();
+                }
+            }
         },
-        handleImageUpload(event, index) {
+        async handleImageUpload(event, index) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.blocks[index].content = e.target.result;
+                const formData = new FormData();
+                formData.append('image', file);
+
+                try {
+                    // Gửi file tới Laravel API
+                    const response = await axios.post('http://127.0.0.1:8000/api/upload', formData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+
+                    // Cập nhật content của block với đường dẫn ảnh trả về
+                    this.blocks[index].content = response.data.filePath;
                     this.blocks[index].isImageUploaded = true;
-                };
-                reader.readAsDataURL(file);
+                } catch (error) {
+                    console.error('Upload failed:', error);
+                }
             }
         },
         removeImage(index) {
             this.blocks[index].isImageUploaded = false;
             this.blocks.splice(index, 1);
+        },
+        deleteImage(index) {
+            this.blocks[index].isImageUploaded = false;
+
+            const imagePath = this.blocks[index].content;
+
+            if (!imagePath) {
+                console.error('No image path found for deletion');
+                return;
+            }
+
+
+            axios.post('http://127.0.0.1:8000/api/delete-image', { filePath: imagePath })
+                .then(response => {
+                    console.log(response.data.message);
+
+                    this.blocks.splice(index, 1);
+                })
+                .catch(error => {
+                    console.error('Failed to delete image:', error);
+                });
         },
         // link
 

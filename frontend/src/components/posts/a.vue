@@ -14,12 +14,7 @@
             <button @click="addBlock('quote')">Thêm Trích dẫn</button>
             <button @click="addBlock('image')">Thêm Hình ảnh</button>
         </div> -->
-    addBlock(type) {
-    if (type === 'quote') {
-    this.blocks.push({ type: 'text', class: 'ce-quote', content: '' });
-    // this.blocks.push({ type: 'quote', content: '' });
-    } else if (type === 'image') {
-    this.blocks.push({ type: 'image', src: '' });
-    }
-    },
+    // Get data
+
+
 </template>
