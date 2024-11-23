@@ -12,7 +12,7 @@
 
 
     <div v-if="isLoggedIn" class="d-flex justify-content-end ">
-        <router-link class=" write-button me-1 ms-1" to="/post/write">
+        <router-link class=" write-button me-1 ms-1" to="/post/write" v-if="!isExcludedPath">
             <i class="fa-solid fa-feather me-2"></i>
             <span>Viết bài</span>
         </router-link>
@@ -90,7 +90,10 @@ export default {
     data() {
         return {
             isLoggedIn: false,
-            user: null
+            user: null,
+            excludedPaths: [
+                '/post/write',
+            ]
         };
     },
     mounted() {
@@ -115,6 +118,12 @@ export default {
             return avatar ? avatar : '/avatars/default.webp';
         },
 
+    }
+    ,
+    computed: {
+        isExcludedPath() {
+            return this.excludedPaths.some(path => this.$route.path.includes(path));
+        }
     }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <form action="" @submit.prevent="upPosts">
+    <form action="" @submit.prevent="upPosts()">
         <div class="post-form">
             <div class="title" contenteditable="true" @input="handleInput" :text-content="title"
                 placeholder="Tiêu đề bài viết.....">
@@ -27,8 +27,7 @@
                     <template #footer>
                         <div class="d-flex justify-content-center align-items-center modal-footer">
                             <button type="button" @click="open = false" class="btn-cancel me-3">Quay lại</button>
-                            <button @click="upPosts" class="btn-create">Tạo</button>
-
+                            <button @click="upPosts()" class="btn-create">Tạo</button>
 
                         </div>
                     </template>
@@ -45,16 +44,17 @@ import CeBlock from './CeBlock.vue';
 import { reactive, toRefs, ref } from 'vue';
 import { getUser } from '../../services/auth';
 import { notification } from 'ant-design-vue';
-
+import { useRouter } from 'vue-router';
 export default {
     components: {
         CeBlock,
     },
 
     setup() {
+        const router = useRouter();
         const ceBlockRef = ref(null);
         const handleInput = (event) => {
-            post.title = event.target.innerText.trim(); // Cập nhật giá trị title
+            post.title = event.target.innerText.trim();
         };
         const post = reactive({
             title: '',
@@ -82,11 +82,14 @@ export default {
             const imageItem = contentData.find(item => typeof item === 'object' && item.src);
             post.image = imageItem ? imageItem.src : '';
             post.content = JSON.stringify(contentData);
-
+            console.log(post.content);
             // Gửi API
             axios.post('http://127.0.0.1:8000/api/posts', post)
                 .then((response) => {
-                    console.log('Response:', response.data);
+                    const postData = response.data;
+                    post.value = postData.post;
+                    const postID = postData.post_id;
+                    router.push(`/post/${postID}`);
                     notification.success({
                         message: 'Bài viết đã được tạo thành công!',
                         duration: 2,
@@ -133,6 +136,7 @@ export default {
     padding: 25px 30px;
     max-width: 45rem;
     margin: 0 auto;
+    /* */
 }
 
 .post-form .title {

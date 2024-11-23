@@ -67,8 +67,9 @@
                 </template>
                 <template v-else>
                     <a-dropdown :placement="'bottom'" arrow>
-                        <button :class="{ active: activeStates[button.state] }" @click="applyAction(button.action)"
-                            v-html="button.label"></button>
+                        <button :class="{ active: activeStates[button.state] }" type="button" v-html="button.label"
+                            @click="applyAction(button.action)">
+                        </button>
                         <template #overlay>
                             <a-menu class="d-flex flex-column align-items-center p-2">
                                 <span>{{ button.tooltip }}</span>
@@ -147,10 +148,15 @@ export default {
 
             return contents.map((content, index) => {
                 const clone = content.cloneNode(true);
+
                 const buttons = clone.querySelector('.add-block-buttons');
                 if (buttons) {
                     buttons.remove();
                 }
+                const editableElements = clone.querySelectorAll('[contenteditable]');
+                editableElements.forEach(element => {
+                    element.removeAttribute('contenteditable');
+                });
 
 
                 const block = this.blocks[index];
@@ -163,7 +169,6 @@ export default {
                         caption: caption,
                     };
                 }
-
                 return clone.innerHTML.trim();
             });
         },
@@ -296,6 +301,7 @@ export default {
         },
 
         applyAction(action) {
+
             switch (action) {
                 case 'applyBold':
                     document.execCommand('bold');
@@ -434,13 +440,15 @@ export default {
 <style scoped>
 .ce-block-container {
     position: relative;
+    font-family: "Noto Serif", Regular, Times New Roman;
 }
 
 .ce-paragraph {
     outline: none;
     padding: 0.475rem 0;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     margin-bottom: 1.25rem;
+    font-weight: 400;
 }
 
 .ce-quote {
@@ -448,7 +456,7 @@ export default {
     outline: none;
     padding: 0.625rem 0.75rem 0.625rem 2rem;
     margin-bottom: 1.25rem;
-    font-size: 1.2rem;
+    font-size: 1.1875rem;
     border-left: 2.5px solid #ff7919;
 }
 
@@ -592,6 +600,6 @@ export default {
 .ce-image-block .caption {
     padding: 0.625rem 0.75rem;
     outline: none;
-    font-size: .85rem;
+    font-size: 1.1rem;
 }
 </style>
