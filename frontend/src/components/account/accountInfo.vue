@@ -21,11 +21,11 @@
             <div class="d-grid gap-3 mb-5" style="grid-template-columns: repeat(2, 1fr);">
                 <div class="user-info">
                     <label for="name" class="fw-bold text-secondary">Tên người dùng</label>
-                    <a-input v-model:value="value" size="large" placeholder="large size" class="mt-3 " />
+                    <a-input v-model:value="value" size="large" class="mt-3 " />
                 </div>
                 <div class="user-info">
                     <label for="email" class="fw-bold text-secondary">Email</label>
-                    <a-input v-model:value="value" size="large" placeholder="large size" class="mt-3" />
+                    <a-input v-model:value="value" size="large" class="mt-3" />
                 </div>
                 <div class="user-info">
                     <label for="dob" class="fw-bold text-secondary">Ngày sinh</label>
@@ -58,17 +58,17 @@
             <div class="d-grid gap-3 mb-5" style="grid-template-columns: repeat(2, 1fr);">
                 <div class="user-info">
                     <label for="phone" class="fw-bold text-secondary">Số điện thoại</label>
-                    <a-input v-model:value="value" size="large" placeholder="large size" class="mt-3 " />
+                    <a-input v-model:value="value" size="large" placeholder="Số điện thoại" class="mt-3 " />
                 </div>
                 <div class="user-info">
                     <label for="address" class="fw-bold text-secondary">Địa chỉ</label>
-                    <a-input v-model:value="value" size="large" placeholder="large size" class="mt-3" />
+                    <a-input v-model:value="value" size="large" placeholder="Địa chỉ" class="mt-3" />
                 </div>
             </div>
             <a-button type="primary mb-5" size="large">Kết nối Facebook</a-button>
             <div class="submit d-flex justify-content-end">
                 <button class="cancel me-3">Hủy</button>
-                <button class="save">Lưu</button>
+                <button class="save" @click="updateAvatar">Lưu</button>
             </div>
         </div>
     </div>
@@ -76,7 +76,8 @@
 
 <script>
 import { CameraOutlined } from '@ant-design/icons-vue';
-
+import axios from 'axios';  // Đảm bảo đã cài axios để thực hiện request
+import { getUser } from '../../services/auth';
 export default {
     components: {
         CameraOutlined
@@ -88,24 +89,57 @@ export default {
             month: null,
             year: null,
             gender: '',
+            avatarUrl: null,
         };
     },
     methods: {
-        handleImageChange(event, type) {
+        async handleImageChange(event, type) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.$refs[type].style.backgroundImage = `url(${e.target.result})`;
-                    this.$refs[type].style.backgroundColor = "transparent"; // Đổi màu nền khi có ảnh
-                };
-                reader.readAsDataURL(file);
+                const formData = new FormData();
+                formData.append('image', file);
+
+                try {
+                    const response = await axios.post('http://127.0.0.1:8000/api/uploadAvatar', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+
+                    const filePath = response.data.filePath;
+                    console.log('Đường dẫn tới ảnh:', filePath);
+                    this.avatarUrl = filePath;
+                    this.$refs[type].style.backgroundImage = `url(${filePath})`;
+                    this.$refs[type].style.backgroundColor = "transparent";
+                } catch (error) {
+                    console.error("Lỗi tải ảnh lên:", error);
+                }
+            }
+        },
+
+        async updateAvatar() {
+            if (!this.avatarUrl) {
+                alert("Chưa có avatar để lưu!");
+                return;
+            }
+
+            try {
+                const userId = getUser().id;
+                const response = await axios.post(`http://127.0.0.1:8000/api/user/${userId}/update-avatar`, {
+                    avatar: this.avatarUrl
+                });
+
+                console.log("Avatar đã được cập nhật thành công!");
+                alert("Cập nhật avatar thành công!");
+            } catch (error) {
+                console.error("Lỗi khi cập nhật avatar:", error);
+                alert("Có lỗi xảy ra khi cập nhật avatar.");
             }
         }
     }
-
 };
 </script>
+
 
 <style>
 .cover-upload,

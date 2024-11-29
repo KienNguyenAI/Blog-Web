@@ -23,12 +23,32 @@
                     <div>
                         <label for="" class="fw-bold">Mô tả bài viết </label>
                         <a-textarea v-model:value="description" :rows="4" />
+                        <div class="post-category mt-3 ">
+                            <label for="" class="fw-bold" style="font-size: .7rem;">Chọn danh mục</label>
+                            <div class="post_category_list mt-3">
+                                <div class="selected-topic d-flex flex-wrap">
+                                    <div class="topic selected-tag" v-for="(tag, index) in selectedTags"
+                                        :key="'selected-' + index">
+                                        {{ tag.name }}
+                                        <span @click="removeSelectedTag(index)"
+                                            style="cursor: pointer; margin-left: 0.5rem;">&times;</span>
+                                    </div>
+                                </div>
+                                <div class="category_list shadow p-3 mt-3">
+                                    <div class="topic" v-for="(tag, index) in tagsData" :key="'available-' + index"
+                                        @click="toggleSelectTag(index)">
+                                        {{ tag.name }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                     <template #footer>
-                        <div class="d-flex justify-content-center align-items-center modal-footer">
-                            <button type="button" @click="open = false" class="btn-cancel me-3">Quay lại</button>
+                        <div class=" d-flex justify-content-center align-items-center modal-footer">
+                            <button type="button" @click="open = false" class="btn-cancel me-3">Quay
+                                lại</button>
                             <button @click="upPosts()" class="btn-create">Tạo</button>
-
                         </div>
                     </template>
                 </a-modal>
@@ -45,14 +65,51 @@ import { reactive, toRefs, ref } from 'vue';
 import { getUser } from '../../services/auth';
 import { notification } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
+import TopicName from '../TopicName.vue';
 export default {
     components: {
         CeBlock,
+        TopicName
     },
 
     setup() {
         const router = useRouter();
         const ceBlockRef = ref(null);
+
+        const tagsData = ref([]);
+        const selectedTags = ref([]);
+
+        const fetchTags = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/tags');
+                tagsData.value = response.data.map(tag => ({ id: tag.id, name: tag.name })); // Lưu cả id và name
+            } catch (error) {
+                console.error('Không thể lấy danh sách tags:', error);
+            }
+        };
+
+        const toggleSelectTag = (index) => {
+            const selectedTag = tagsData.value[index];
+
+            if (selectedTags.value.length > 0) {
+                const removedTag = selectedTags.value.pop();
+                tagsData.value.push(removedTag);
+            }
+
+            selectedTags.value.push(selectedTag);
+            tagsData.value.splice(index, 1);
+        };
+
+
+        const removeSelectedTag = (index) => {
+            const removedTag = selectedTags.value[index];
+            tagsData.value.push(removedTag);
+            selectedTags.value.splice(index, 1);
+        };
+
+
+        fetchTags();
+
         const handleInput = (event) => {
             post.title = event.target.innerText.trim();
         };
@@ -62,15 +119,13 @@ export default {
             description: '',
             image: '',
             status: 'published',
-            users_id: getUser().id
+            users_id: getUser().id,
+            tags_id: '',
         });
 
 
         const upPosts = () => {
-
-            // Lấy dữ liệu từ CeBlock
             const contentData = ceBlockRef.value.getAllContent();
-
             if (!contentData || contentData.length === 0) {
                 notification.error({
                     message: 'Nội dung không được để trống',
@@ -79,17 +134,46 @@ export default {
                 return;
             }
 
+            if (!post.description) {
+                const contentText = contentData.map(item => {
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(item, 'text/html');
+                    return doc.body.innerText.trim();
+                }).join('. ');
+
+                const words = contentText.split(' ');
+                if (words.length > 30) {
+                    post.description = words.slice(0, 50).join(' ') + '...';
+                } else {
+                    post.description = contentText;
+                }
+            }
             const imageItem = contentData.find(item => typeof item === 'object' && item.src);
             post.image = imageItem ? imageItem.src : '';
             post.content = JSON.stringify(contentData);
-            console.log(post.content);
+
+
+            // Lấy danh sách tags_id từ selectedTags
+            const tags_id = selectedTags.value.map(tag => tag.id);
+
+            // Kiểm tra nếu chưa chọn thẻ nào
+            if (tags_id === 0) {
+                notification.error({
+                    message: 'Bạn cần chọn ít nhất một danh mục',
+                    duration: 2,
+                    style: { backgroundColor: '#ffc7c4' },
+                });
+                return;
+            }
+            post.tags_id = tags_id[0];
+
             // Gửi API
             axios.post('http://127.0.0.1:8000/api/posts', post)
                 .then((response) => {
                     const postData = response.data;
                     post.value = postData.post;
-                    const postID = postData.post_id;
-                    router.push(`/post/${postID}`);
+                    router.push(`/post/${post.value.slug}`);
                     notification.success({
                         message: 'Bài viết đã được tạo thành công!',
                         duration: 2,
@@ -112,15 +196,17 @@ export default {
             upPosts,
             handleInput,
             ...toRefs(post),
+            tagsData,
+            selectedTags,
+            removeSelectedTag,
+            toggleSelectTag
         };
     },
 
     methods: {
-
         showModal() {
             this.open = true;
         },
-
     },
 
     data() {
@@ -205,5 +291,28 @@ export default {
 .modal-footer .btn-create:hover {
     background-color: #da5600;
 
+}
+
+.post_category_list .category_list {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 15rem;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    border-radius: .5rem;
+}
+
+
+.post_category_list .topic {
+    border: 1px solid #c4c4c4;
+    border-radius: 3rem;
+    padding: .2rem 1rem;
+    margin-bottom: .5rem;
+    margin-right: .375rem;
+    cursor: pointer;
+}
+
+.post_category_list .topic:hover {
+    background-color: #eaeaef;
 }
 </style>

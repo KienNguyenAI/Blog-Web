@@ -33,4 +33,21 @@ class UserController extends Controller
             'follower_count' => $followerCount
         ]);
     }
+    public function updateAvatar(Request $request, $userId)
+    {
+        $request->validate([
+            'avatar' => 'required',
+        ]);
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->avatar = $request->avatar;
+        $user->save();
+
+        return response()->json(['message' => 'Avatar updated successfully']);
+    }
 }

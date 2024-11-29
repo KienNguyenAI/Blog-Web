@@ -55,22 +55,21 @@
                                     <i class="fa-solid fa-pencil icon"></i>
                                     <span class="text">Bài viết</span>
                                 </a>
-                                <a href="#" class="item " :class="{ active: activeTab === 'series' }"
+                                <!-- <a href="#" class="item " :class="{ active: activeTab === 'series' }"
                                     @click="setActiveTab('series')">
                                     <i class="fa-solid fa-book icon"></i>
                                     <span class="text">Series</span>
-                                </a>
+                                </a> -->
                                 <a href="#" class="item d-none d-sm-block" :class="{ active: activeTab === 'saved' }"
-                                    @click="setActiveTab('saved')">
+                                    @click="setActiveTab('saved')" v-if="loginUser === user.id">
                                     <i class="fa-solid fa-bookmark icon"></i>
                                     <span class="text">Đã Lưu</span>
                                 </a>
                             </div>
-                            <a-dropdown>
+                            <!-- <a-dropdown>
                                 <a class="ant-dropdown" @click.prevent>
                                     <i class="fa-solid fa-ellipsis-vertical p-3"
                                         style="cursor: pointer; color: #898989;"></i>
-                                    <!-- <DownOutlined /> -->
                                 </a>
                                 <template #overlay>
                                     <a-menu>
@@ -85,9 +84,15 @@
                                         </a-menu-item>
                                     </a-menu>
                                 </template>
-                            </a-dropdown>
-
+</a-dropdown> -->
                         </div>
+                    </div>
+                    <div class="profile-content pe-4">
+                        <!-- Hiển thị MyPosts khi activeTab là 'post' -->
+                        <MyPosts v-if="activeTab === 'post'" />
+
+                        <!-- Hiển thị Saved khi activeTab là 'saved' -->
+                        <Saved v-if="activeTab === 'saved'" />
                     </div>
                 </div>
             </div>
@@ -97,8 +102,14 @@
 
 <script>
 import { notification } from 'ant-design-vue';
+import Saved from './saved.vue';
+import MyPosts from './MyPosts.vue';
+import { getUser } from '../../services/auth';
 export default {
-
+    components: {
+        Saved,
+        MyPosts,
+    },
     data() {
         return {
             activeTab: 'post',
@@ -110,7 +121,8 @@ export default {
                 following: 0,
             },
             showEditProfile: false,
-            showFollowButton: true
+            showFollowButton: true,
+            loginUser: getUser().id,
         };
     },
     mounted() {
@@ -255,6 +267,7 @@ export default {
 }
 
 .profile-left {
+    height: 100%;
     background-color: #f9f9f9;
 }
 

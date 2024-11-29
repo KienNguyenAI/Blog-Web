@@ -28,16 +28,20 @@
     </div>
 
     <div class="card-gallery">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        <hot v-if="selectedItem === 'THỊNH HÀNH'" />
+        <newPosts v-if="selectedItem === 'MỚI'" />
+        <follow v-if="selectedItem === 'DÀNH CHO BẠN'" />
+        <top v-if="selectedItem === 'TOP'" />
     </div>
 </template>
 
 <script>
 import { FireOutlined, StarOutlined, HeartOutlined, CrownOutlined } from '@ant-design/icons-vue';
-import Card from '../../components/cards/Card.vue';
+
+import hot from './hot.vue';
+import newPosts from './new.vue';
+import follow from './follow.vue';
+import top from './top.vue';
 
 export default {
     components: {
@@ -45,7 +49,10 @@ export default {
         StarOutlined,
         HeartOutlined,
         CrownOutlined,
-        Card
+        hot,
+        newPosts,
+        follow,
+        top
     },
     data() {
         return {
@@ -55,7 +62,27 @@ export default {
     methods: {
         selectItem(item, sort) {
             this.selectedItem = item;
-            this.$router.push({ path: '/', query: { sort: sort } });
+            this.$router.push({ query: { sort: sort } });
+        }
+    },
+    watch: {
+        '$route.query.sort': function (newSort) {
+            switch (newSort) {
+                case 'hot':
+                    this.selectedItem = 'THỊNH HÀNH';
+                    break;
+                case 'new':
+                    this.selectedItem = 'MỚI';
+                    break;
+                case 'follow':
+                    this.selectedItem = 'DÀNH CHO BẠN';
+                    break;
+                case 'top':
+                    this.selectedItem = 'TOP';
+                    break;
+                default:
+                    this.selectedItem = 'THỊNH HÀNH';
+            }
         }
     }
 };

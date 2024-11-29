@@ -90,7 +90,6 @@ export default {
                 })
                 .catch((error) => {
                     errors.value = error.response.data.errors;
-
                 })
         }
 

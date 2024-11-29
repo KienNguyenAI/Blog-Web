@@ -33,10 +33,10 @@ class AuthController extends Controller
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
             'password.confirmed' => 'Mật khẩu và xác nhận mật khẩu không khớp',
         ]);
-
+        $ran = random_int(1, 4);
         // Tạo người dùng mới
         $user = User::create([
-            'avatar' => '',
+            'avatar' => "http://127.0.0.1:8000/storage/avatar/default/default{$ran}.webp",
             'email' => $validated['email'],
             'username' => $validated['username'],
             'name' => $validated['name'],

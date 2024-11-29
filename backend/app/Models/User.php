@@ -44,4 +44,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function savedPosts()
+    {
+        return $this->hasMany(\App\Models\SavePost::class, 'users_id');
+    }
+    public function userBio()
+    {
+        return $this->hasOne(UserBio::class);
+    }
 }

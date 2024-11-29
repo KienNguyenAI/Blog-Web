@@ -76,4 +76,19 @@ class VoteController extends Controller
             'down_votes' => $downVotes,
         ]);
     }
+    public function getUserUpvotes(Request $request, $userId)
+    {
+
+        if (!$userId) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $upvotedPosts = Vote::where('users_id', $userId)
+            ->where('vote_type', 'up')
+            ->with('post')
+            ->get()
+            ->pluck('post');
+
+        return response()->json($upvotedPosts);
+    }
 }

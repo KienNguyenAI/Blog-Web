@@ -2,7 +2,12 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-8 col-12">
-                <Card />
+                <Card v-if="firstPost" :title="firstPost.title" :slug="firstPost.slug" :imgSrc="firstPost.image"
+                    :description="firstPost.description" :authorName="firstPost.user.name"
+                    :avatar="firstPost.user.avatar" :createdAt="formatDate(firstPost.created_at)" :isUpvoted="false"
+                    :voteCount="firstPost.votes_count" :category="firstPost.tag.name"
+                    :readTime="calculateReadTime(firstPost.content)" :cateSlug="firstPost.tag.slug" />
+
                 <div class="trending-carousel">
                     <!-- Nút mũi tên trái -->
                     <button class="carousel-arrow left-arrow" @click="prevSlide">
@@ -12,12 +17,15 @@
                         <div class="carousel-slider">
                             <swiper ref="mySwiper" :space-between="30" :pagination="true" :slides-per-view="1"
                                 :breakpoints="{
-                                    320: { slidesPerView: 1 },  // Màn hình điện thoại hiển thị 1 slide
-                                    768: { slidesPerView: 2 },  // Màn hình tablet hiển thị 2 slide
-                                    1024: { slidesPerView: 3 }  // Màn hình desktop hiển thị 3 slide
+                                    320: { slidesPerView: 1 },
+                                    768: { slidesPerView: 2 },
+                                    1024: { slidesPerView: 3 }
                                 }" @swiper="onSwiper">
-                                <swiper-slide v-for="(card, index) in cardData" :key="index">
-                                    <CardVertical :data="card" :isInSlider="true" />
+                                <swiper-slide v-for="(card, index) in posts" :key="index">
+                                    <CardVertical :title="card.title" :slug="card.slug" :imgSrc="card.image"
+                                        :readTime="calculateReadTime(card.content)" :author="card.user.name"
+                                        :authorName="card.user.username" :authorAvatar="card.user.avatar"
+                                        :createAt="formatDate(card.created_at)" :isInSlider="true" />
                                 </swiper-slide>
                             </swiper>
                         </div>
@@ -32,7 +40,7 @@
                 <div class="widget">
                     <div class="widget-body">
                         <div class="widget-title pb-4">
-                            Quan điểm - Tranh luận
+                            {{ tag }}
                         </div>
                         <div class="widget-content text-black">
                             <p><strong>Nội dung cho phép:</strong></p>
@@ -74,23 +82,48 @@ export default {
     },
     data() {
         return {
-            swiperInstance: null, // Lưu instance của swiper
-            cardData: [
-                { title: 'Card 1', description: 'Description 1' },
-                { title: 'Card 2', description: 'Description 2' },
-                { title: 'Card 3', description: 'Description 3' },
-                { title: 'Card 4', description: 'Description 4' },
-                { title: 'Card 5', description: 'Description 5' }
-            ]
+            posts: [],
+            swiperInstance: null,
+            firstPost: null,
+            tag: ""
         };
     },
+    created() {
+        this.fetchPostsByTag();
+    },
     methods: {
-        // Lưu instance swiper khi nó được khởi tạo
+        fetchPostsByTag() {
+            const tagSlug = this.$route.params.slug;
+            axios.get(`http://127.0.0.1:8000/api/posts/tag/${tagSlug}`)
+                .then(response => {
+                    const posts = response.data;
+                    if (posts.length > 0) {
+                        this.firstPost = posts[0];
+                        this.tag = posts[0].tag.name
+                        this.posts = posts.slice(1, 6);
+                    }
+                })
+                .catch(error => {
+                    console.error('Có lỗi xảy ra khi lấy bài viết:', error);
+                });
+        },
+
+        calculateReadTime(content) {
+            const wordsPerMinute = 200;
+            const wordCount = content.split(/\s+/).length;
+            return Math.ceil(wordCount / wordsPerMinute);
+        },
+
+
+        formatDate(date) {
+            const options = { month: 'long', day: 'numeric' };
+            const formattedDate = new Date(date).toLocaleDateString('vi-VN', options);
+            return formattedDate;
+        },
         onSwiper(swiper) {
             this.swiperInstance = swiper;
         },
 
-        // Chuyển tới slide tiếp theo
         nextSlide() {
             if (this.swiperInstance) {
                 this.swiperInstance.slideNext();
@@ -99,7 +132,6 @@ export default {
             }
         },
 
-        // Chuyển tới slide trước
         prevSlide() {
             if (this.swiperInstance) {
                 this.swiperInstance.slidePrev();

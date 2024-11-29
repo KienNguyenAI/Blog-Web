@@ -61,4 +61,14 @@ class FollowController extends Controller
             return response()->json(['message' => 'Follow relationship not found'], 404);
         }
     }
+    public function getFollowedAuthors(Request $request)
+    {
+        $followerId = $request->input('follower');
+
+        $followedAuthors = Follower::where('follower_id', $followerId)
+            ->pluck('following_id'); 
+        return response()->json([
+            'followedAuthors' => $followedAuthors
+        ], 200);
+    }
 }

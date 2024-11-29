@@ -1,5 +1,4 @@
 <template>
-
     <div class="d-flex align-items-center" v-if="!isLoggedIn">
         <router-link to="/createAccount" class="text-decoration-none pe-0">
             <span class="signin m-sm-3 d-none d-sm-flex">Đăng ký</span>
@@ -10,28 +9,27 @@
         </router-link>
     </div>
 
-
-    <div v-if="isLoggedIn" class="d-flex justify-content-end ">
-        <router-link class=" write-button me-1 ms-1" to="/post/write" v-if="!isExcludedPath">
+    <div v-if="isLoggedIn" class="d-flex justify-content-end">
+        <router-link class="write-button me-1 ms-1" to="/post/write" v-if="!isExcludedPath">
             <i class="fa-solid fa-feather me-2"></i>
             <span>Viết bài</span>
         </router-link>
         <a-dropdown trigger="click">
             <div class="ant-dropdown-link" style="cursor: pointer;">
-                <img :src="getAvatar(user.avatar)" alt="Avatar" class="rounded-circle"
+                <img v-if="user && user.avatar" :src="getAvatar(user.avatar)" alt="Avatar" class="rounded-circle"
                     style="width: 2.5rem; height: 2.5rem;">
                 <CaretDownOutlined style="font-size: .5rem;" />
             </div>
             <template #overlay>
-                <a-card class="card-dropdown " style="width: 300px;">
-                    <div class="nav-user-details  mb-3">
-                        <img :src="getAvatar(user.avatar)" alt="" class="user-avatar me-3">
+                <a-card class="card-dropdown" style="width: 300px;">
+                    <div class="nav-user-details mb-3">
+                        <img v-if="user && user.avatar" :src="getAvatar(user.avatar)" alt="" class="user-avatar me-3">
                         <div class="user-info w-100">
-                            <div class=" d-flex">
-                                <span class="display-name">{{ user.name }}</span>
+                            <div class="d-flex">
+                                <span class="display-name">{{ user ? user.name : '' }}</span>
                             </div>
                             <div class="d-flex">
-                                <span class="user-name">@{{ user.username }}</span>
+                                <span class="user-name">@{{ user ? user.username : '' }}</span>
                             </div>
 
                             <router-link :to="`/account/${user.username}`" class="p-0">
@@ -56,10 +54,10 @@
                             <i class="fa-regular fa-bookmark fa-lg me-2"></i>
                             <span>Đã lưu</span>
                         </div>
-                        <div class="content">
+                        <router-link :to="`/account/setting`" class="content text-black">
                             <i class="fa-solid fa-gear fa-lg me-2"></i>
                             <span>Tùy chỉnh tài khoản</span>
-                        </div>
+                        </router-link>
                         <hr class="my-2">
                         <div class="content" @click="logout">
                             <i class="fa-solid fa-right-from-bracket fa-lg me-2"></i>
@@ -69,43 +67,64 @@
                 </a-card>
             </template>
         </a-dropdown>
-        <!-- Dropdown with image and icon -->
     </div>
 </template>
 
 <script>
 import { CaretDownOutlined } from '@ant-design/icons-vue';
 import { isLoggedIn, getUser, logout } from '../services/auth';
+import axios from 'axios';
+
 export default {
     components: {
         CaretDownOutlined,
-
     },
     props: {
         showShadow: {
             type: Boolean,
-            default: true
-        }
+            default: true,
+        },
     },
     data() {
         return {
             isLoggedIn: false,
             user: null,
-            excludedPaths: [
-                '/post/write',
-            ]
+            excludedPaths: ['/post/write'],
         };
     },
     mounted() {
         this.checkLoginStatus();
     },
     methods: {
-
         checkLoginStatus() {
             this.isLoggedIn = isLoggedIn();
             if (this.isLoggedIn) {
-                this.user = getUser();
+                const userId = getUser().id;
+                this.getUserData(userId);
             }
+        },
+
+        getUserData(userId) {
+            axios
+                .get(`http://127.0.0.1:8000/api/users/${userId}`)
+                .then((response) => {
+                    // Kiểm tra xem API trả về dữ liệu hợp lệ không
+                    if (response.data && response.data.avatar) {
+                        this.user = response.data;
+                        console.log('User data:', this.user);
+                    } else {
+                        console.error('User data is missing avatar:', response.data);
+                        this.user = null;
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching user data:', error);
+                    this.user = null;
+                });
+        },
+
+        getAvatar(avatar) {
+            return avatar ? avatar : '/avatars/default.webp';
         },
 
         logout() {
@@ -113,22 +132,16 @@ export default {
             this.isLoggedIn = false;
             this.user = null;
         },
-        getAvatar(avatar) {
-
-            return avatar ? avatar : '/avatars/default.webp';
-        },
-
-    }
-    ,
+    },
     computed: {
         isExcludedPath() {
-            return this.excludedPaths.some(path => this.$route.path.includes(path));
-        }
-    }
-}
+            return this.excludedPaths.some((path) => this.$route.path.includes(path));
+        },
+    },
+};
 </script>
 
-<style>
+<style scoped>
 .login {
     padding: 0.75rem;
     padding-left: 1.5rem;
@@ -147,7 +160,6 @@ export default {
     color: black;
     font-size: 1.1rem;
 }
-
 
 .nav-user-details {
     display: flex;
@@ -197,11 +209,10 @@ export default {
 
 .nav-user-contents .content span {
     font-size: 1.1rem;
-    color: black
+    color: black;
 }
 
 .write-button {
-
     color: black;
     padding: .7rem;
     padding-left: 1.5rem;

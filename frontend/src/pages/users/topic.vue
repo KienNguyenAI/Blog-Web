@@ -4,12 +4,11 @@
         <div class="d-flex flex-wrap">
 
             <Category v-for="(topic, index) in (isMobile ? topics.slice(0, 2) : topics)" :key="index"
-                :topicName="topic" />
+                :topicName="topic.name" @click="goToCategory(topic.slug)" />
 
-            <Category v-for="(topic, index) in topics.slice(2)" :key="index + 2" :topicName="topic"
-                v-show="showAll && isMobile" />
+            <Category v-for="(topic, index) in topics.slice(2)" :key="index + 2" :topicName="topic.name"
+                v-show="showAll && isMobile" @click="goToCategory(topic.slug)" />
         </div>
-
         <a-button type="primary" size="large" shape="round" class="d-sm-none d-block" v-show="isMobile && !showAll"
             @click="toggleShowAll" style="background-color: #ff7919;">
             Hiển thị thêm
@@ -19,46 +18,44 @@
 
 <script>
 import Category from '../../components/TopicName.vue';
-
+import { useRouter } from 'vue-router';
 export default {
     components: {
         Category
     },
     data() {
         return {
-            topics: [
-                'Quan điểm - Tranh luận',
-                'Chính trị - Xã hội',
-                'Kinh tế - Thị trường',
-                'Văn hóa - Giải trí',
-                'Giáo dục - Đào tạo',
-                'Sức khỏe - Y tế',
-                'Môi trường - Thiên nhiên',
-                'Công nghệ - Đổi mới',
-                'Lịch sử - Di sản',
-                'Du lịch - Khám phá',
-                'Sáng tạo - Khởi nghiệp',
-                'Thể thao - Giải trí',
-                'Phong cách sống'
-            ],
             showAll: false,
             isMobile: false,
+            topics: [],
         };
     },
     methods: {
+        goToCategory(slug) {
+            this.$router.push({ name: 'CategoryPage', params: { slug } });
+        },
         toggleShowAll() {
             this.showAll = !this.showAll;
         },
         checkScreenSize() {
-            this.isMobile = window.innerWidth <= 576; // Kiểm tra nếu màn hình nhỏ hơn hoặc bằng 576px
+            this.isMobile = window.innerWidth <= 576;
+        },
+        async fetchTags() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/tags');
+                this.topics = response.data;
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+            }
         }
     },
     mounted() {
+        this.fetchTags();
         this.checkScreenSize();
-        window.addEventListener('resize', this.checkScreenSize); // Lắng nghe sự thay đổi kích thước màn hình
+        window.addEventListener('resize', this.checkScreenSize);
     },
     beforeUnmount() {
-        window.removeEventListener('resize', this.checkScreenSize); // Gỡ bỏ sự kiện khi component bị hủy
+        window.removeEventListener('resize', this.checkScreenSize);
     }
 }
 </script>

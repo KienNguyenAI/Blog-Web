@@ -32,7 +32,8 @@ const publicRoutes = [
                 component: topBlogs
             },
             {
-                path: 'categories',
+                path: 'category/:slug',
+                name: 'CategoryPage',
                 component: category,
             },
             {
@@ -45,7 +46,7 @@ const publicRoutes = [
                 component: setting,
             },
             {
-                path: '/post/:id',
+                path: '/post/:slug',
                 component: readPost,
             }
 
