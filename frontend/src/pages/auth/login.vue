@@ -67,15 +67,19 @@ export default {
         const check = () => {
             axios.post('http://127.0.0.1:8000/api/login', users)
                 .then((response) => {
-                    notification.success({
-                        message: `Đăng nhập thành công`,
-                        duration: 1,
-                        style: {
-                            backgroundColor: '#f6ffed',
-                        }
-                    });
-                    localStorage.setItem('user', JSON.stringify(response.data.user));
-                    router.push('/');
+                    if (users.username_or_email === 'admin' && users.password === 'password123') {
+                        router.push('/admin');
+                    } else {
+                        notification.success({
+                            message: `Đăng nhập thành công`,
+                            duration: 1,
+                            style: {
+                                backgroundColor: '#f6ffed',
+                            }
+                        });
+                        localStorage.setItem('user', JSON.stringify(response.data.user));
+                        router.push('/');
+                    }
 
                 })
                 .catch((error) => {

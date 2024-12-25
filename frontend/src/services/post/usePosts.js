@@ -11,18 +11,19 @@ export function usePosts(sort) {
     const savedPosts = ref([]);
     const userId = isLoggedIn() ? getUser().id : null;
 
-
     const fetchPosts = async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/getPosts/${sort}`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getPosts/${sort}`, {
+                params: { userId: userId }
+            });
             posts.value = response.data;
-
 
             posts.value.forEach(post => {
                 votes.value[post.id] = post.votes_count;
+                if (post.is_saved) savedPosts.value.push(post.id);
             });
 
-
+            console.log(savedPosts.value);
             fetchUserUpvotes();
         } catch (error) {
             console.error('Lỗi khi lấy bài viết:', error);

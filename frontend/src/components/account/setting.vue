@@ -28,7 +28,7 @@ import blockedUsers from './blockedUsers.vue';
 export default {
     data() {
         return {
-            tabs: ['Tài khoản', 'Tiểu sử', 'Series', 'Đã Chặn'],
+            tabs: ['Tài khoản', 'Tiểu sử'],
             selectedTab: 0
         };
     },
@@ -40,10 +40,10 @@ export default {
                     return settingAccount;
                 case 1:
                     return Bio;
-                case 2:
-                    return seriesInfo;
-                case 3:
-                    return blockedUsers;
+                // case 2:
+                //     return seriesInfo;
+                // case 3:
+                //     return blockedUsers;
                 default:
                     return settingAccount; // Mặc định
             }

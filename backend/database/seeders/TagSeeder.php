@@ -12,18 +12,17 @@ class TagSeeder extends Seeder
     {
         $tags = [
             'Quan điểm - Tranh luận',
-            'Chính trị - Xã hội',
-            'Kinh tế - Thị trường',
-            'Văn hóa - Giải trí',
-            'Giáo dục - Đào tạo',
-            'Sức khỏe - Y tế',
-            'Môi trường - Thiên nhiên',
-            'Công nghệ - Đổi mới',
-            'Lịch sử - Di sản',
-            'Du lịch - Khám phá',
-            'Sáng tạo - Khởi nghiệp',
-            'Thể thao - Giải trí',
-            'Phong cách sống'
+            'Khoa học - Công nghệ',
+            'Tài chính',
+            'Lịch Sử',
+            'Movie',
+            'Phát triển bản thân',
+            'Game',
+            'Du lịch',
+            'Thể thao',
+            'Âm nhạc',
+            
+
         ];
 
         foreach ($tags as $tag) {

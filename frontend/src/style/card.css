@@ -5,6 +5,14 @@
     /* Chế độ mặc định là row */
     padding-top: 1.875rem;
     padding-bottom: 1.875rem;
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale3d(1.05, 1.05, 1);
+
 }
 
 .thumbnail {

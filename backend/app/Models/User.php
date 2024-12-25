@@ -52,4 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserBio::class);
     }
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'roles_id'); // 'roles_id' là khóa ngoại trong bảng users
+    }
 }

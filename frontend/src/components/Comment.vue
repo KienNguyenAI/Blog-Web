@@ -10,7 +10,15 @@
         <div class="comment-tree mt-4">
             <div v-for="comment in comments" :key="comment.id" class="comment">
                 <div class="comment-body">
-                    <strong>{{ comment.author }}</strong>
+                    <router-link :to="`/account/${comment.user.username}`">
+                        <img alt="" :src="comment.user.avatar" class="rounded-circle me-3"
+                            style="width: 2.5rem; height: 2.5rem;">
+                        <strong class="text-black">{{ comment.user.name }}</strong>
+                    </router-link>
+
+                    <span v-if="comment.user.id === props.post.users_id" class="ms-3 text-primary"
+                        style="font-size: .75rem;">Tác giả</span>
+
                     <p class="mt-3">{{ comment.content }}</p>
                     <span class="reply" @click="startReply(comment.id)">Trả lời</span>
 
@@ -18,18 +26,29 @@
                     <div v-if="comment.isReplying"
                         class="reply-form d-flex align-content-center justify-content-between">
                         <div class="form-control" contenteditable="true"
-                            :placeholder="'Cảm nghĩ của bạn về comment này'" @input="updateReplyInput(comment.id)">
+                            :placeholder="'Cảm nghĩ của bạn về comment này'"
+                            @input="updateReplyInput(comment.id, $event)">
                         </div>
-                        <span class="submit-comment p-2 ms-2" @click="submitReply(comment.id)">Trả lời</span>
+                        <span class="submit-comment p-2 ms-2 d-flex align-items-center text-center"
+                            @click="submitReply(comment.id)">
+                            Trả lời
+                        </span>
                     </div>
                 </div>
 
-                <!-- Nested replies -->
                 <div class="nested-comments" v-if="comment.replies.length > 0">
                     <div v-for="reply in comment.replies" :key="reply.id" class="comment">
                         <div class="comment-body">
-                            <strong>{{ reply.author }}</strong>
+                            <router-link :to="`/account/${reply.user.username}`">
+                                <img alt="" :src="comment.user.avatar" class="rounded-circle me-3"
+                                    style="width: 2.5rem; height: 2.5rem;">
+                                <strong class="text-black">{{ reply.user.name }}</strong>
+                            </router-link>
+
+                            <span v-if="reply.user.id === props.post.users_id" class="ms-3 text-primary"
+                                style="font-size: .75rem;">Tác giả</span>
                             <p class="mt-3">{{ reply.content }}</p>
+
                         </div>
                     </div>
                 </div>
@@ -53,7 +72,7 @@
 }
 
 .submit-comment {
-
+    display: inline-block;
     cursor: pointer;
 }
 
@@ -99,77 +118,103 @@
 }
 </style>
 
-<script>
-export default {
-    data() {
-        return {
-            commentInput: '', // To track the input value for new comment
-            comments: [
-                {
-                    id: 1,
-                    author: 'Nguyễn Văn A',
-                    content: 'Bài viết rất hay!',
-                    replies: [
-                        {
-                            id: 2,
-                            author: 'Trần Thị B',
-                            content: 'Cảm ơn bạn! Mình cũng rất thích bài viết này.'
-                        }
-                    ],
-                    isReplying: false, // Track if the reply input should be shown
-                    replyContent: '' // To track the reply content
-                },
-                {
-                    id: 3,
-                    author: 'Lê Thị C',
-                    content: 'Rất thích chủ đề này, mong bài viết sau về chủ đề này!',
-                    replies: [],
-                    isReplying: false,
-                    replyContent: '' // To track the reply content for this comment
-                }
-            ]
-        };
-    },
-    methods: {
-        updateCommentInput(event) {
-            this.commentInput = event.target.innerText; // Get content from contenteditable div
-        },
-        updateReplyInput(commentId, event) {
-            const comment = this.comments.find(c => c.id === commentId);
-            comment.replyContent = event.target.innerText; // Get reply content
-        },
-        submitComment() {
-            if (this.commentInput.trim() !== "") {
-                const newComment = {
-                    id: this.comments.length + 1,
-                    author: 'Bạn',
-                    content: this.commentInput,
-                    replies: [],
-                    isReplying: false,
-                    replyContent: ''
-                };
-                this.comments.push(newComment);
-                this.commentInput = ''; // Clear the input field after submission
-            }
-        },
-        startReply(commentId) {
-            const comment = this.comments.find(c => c.id === commentId);
-            comment.isReplying = true;
-        },
-        submitReply(commentId) {
-            const comment = this.comments.find(c => c.id === commentId);
-            const replyContent = comment.replyContent.trim();
-            if (replyContent) {
-                const newReply = {
-                    id: comment.replies.length + 1,
-                    author: 'Bạn',
-                    content: replyContent
-                };
-                comment.replies.push(newReply);
-                comment.replyContent = ''; // Clear reply input after submission
-                comment.isReplying = false; // Hide reply input after submission
-            }
-        }
+<script setup>
+import { ref, reactive, onMounted, watch } from 'vue';
+import { isLoggedIn, getUser } from '../services/auth';
+
+const props = defineProps({
+    post: Object
+});
+
+const commentInput = ref('');
+const comments = reactive([]);
+const user_id = ref(isLoggedIn() ? getUser().id : null);
+
+const updateCommentInput = (event) => {
+    commentInput.value = event.target.innerText;
+};
+
+const updateReplyInput = (commentId, event) => {
+    const comment = comments.find(c => c.id === commentId);
+    if (comment) {
+        comment.replyContent = event.target.innerText;
     }
 };
+
+const submitComment = () => {
+    if (commentInput.value.trim() !== "") {
+        const newComment = {
+            content: commentInput.value,
+            post_id: props.post.id,
+            user_id: user_id.value
+        };
+
+
+        axios.post('http://127.0.0.1:8000/api/comments', newComment)
+            .then(response => {
+                response.data.replies = [];
+                comments.push(response.data);
+                commentInput.value = '';
+                document.getElementById('commentInput').innerText = '';
+            })
+            .catch(error => {
+                console.error("Có lỗi xảy ra khi gửi bình luận", error);
+            });
+    }
+};
+
+const startReply = (commentId) => {
+    const comment = comments.find(c => c.id === commentId);
+    if (comment) {
+        comment.isReplying = true;
+    }
+};
+
+const submitReply = (commentId) => {
+    const comment = comments.find(c => c.id === commentId);
+    const replyContent = comment.replyContent.trim();
+    if (replyContent) {
+        const newReply = {
+            content: replyContent,
+            post_id: props.post.id,
+            user_id: user_id.value,
+            parent_id: commentId
+        };
+        axios.post('http://127.0.0.1:8000/api/comments', newReply)
+            .then(response => {
+                comment.replies.push(response.data);
+                comment.replyContent = '';
+                comment.isReplying = false;
+            })
+            .catch(error => {
+                console.error("Có lỗi xảy ra khi gửi câu trả lời", error);
+            });
+    }
+};
+
+
+onMounted(() => {
+    if (props.post && props.post.id) {
+        axios.get(`http://127.0.0.1:8000/api/comments?post_id=${props.post.id}`)
+            .then(response => {
+                comments.push(...response.data);
+            })
+            .catch(error => {
+                console.error("Có lỗi xảy ra khi tải các bình luận", error);
+            });
+    }
+});
+
+watch(() => props.post, (newPost) => {
+    if (newPost && newPost.id) {
+        axios.get(`http://127.0.0.1:8000/api/comments?post_id=${newPost.id}`)
+            .then(response => {
+                comments.length = 0; // Clear previous comments
+                comments.push(...response.data);
+            })
+            .catch(error => {
+                console.error("Có lỗi xảy ra khi tải các bình luận", error);
+            });
+    }
+}, { immediate: true });
 </script>

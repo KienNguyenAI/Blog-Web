@@ -15,28 +15,30 @@
                     <input type="file" accept="image/*" @change="handleImageChange($event, 'avatarUpload')" />
                 </label>
                 <div class="textarea">
-                    <a-textarea :rows="4" :maxlength="150" show-count style="height: 100%;" />
+                    <a-textarea :rows="4" :maxlength="150" show-count style="height: 100%;"
+                        v-model:value="description" />
                 </div>
             </div>
             <div class="d-grid gap-3 mb-5" style="grid-template-columns: repeat(2, 1fr);">
                 <div class="user-info">
                     <label for="name" class="fw-bold text-secondary">Tên người dùng</label>
-                    <a-input v-model:value="value" size="large" class="mt-3 " />
+                    <a-input v-model:value="userInfo.name" size="large" class="mt-3 " disabled />
                 </div>
                 <div class="user-info">
                     <label for="email" class="fw-bold text-secondary">Email</label>
-                    <a-input v-model:value="value" size="large" class="mt-3" />
+                    <a-input v-model:value="userInfo.email" size="large" class="mt-3" disabled />
                 </div>
                 <div class="user-info">
                     <label for="dob" class="fw-bold text-secondary">Ngày sinh</label>
                     <div class="d-flex mt-3">
-                        <a-select v-model:value="day" class="me-2" placeholder="Ngày" size="large" style="flex: 1;">
+                        <a-select v-model:value="dob.day" class="me-2" placeholder="Ngày" size="large" style="flex: 1;">
                             <a-select-option v-for="n in 31" :key="n" :value="n">{{ n }}</a-select-option>
                         </a-select>
-                        <a-select v-model:value="month" class="me-2" placeholder="Tháng" size="large" style="flex: 1;">
+                        <a-select v-model:value="dob.month" class="me-2" placeholder="Tháng" size="large"
+                            style="flex: 1;">
                             <a-select-option v-for="n in 12" :key="n" :value="n">{{ n }}</a-select-option>
                         </a-select>
-                        <a-select v-model:value="year" class="me-2" placeholder="Năm" size="large" style="flex: 1;">
+                        <a-select v-model:value="dob.year" class="me-2" placeholder="Năm" size="large" style="flex: 1;">
                             <a-select-option v-for="n in 100" :key="2024 - n" :value="2024 - n">{{ 2024 - n
                                 }}</a-select-option>
                         </a-select>
@@ -51,24 +53,24 @@
                     </a-radio-group>
                 </div>
             </div>
-            <button class="change-password mb-5">
+            <!-- <button class="change-password mb-5">
                 Đổi mật khẩu
-            </button>
+            </button> -->
 
             <div class="d-grid gap-3 mb-5" style="grid-template-columns: repeat(2, 1fr);">
                 <div class="user-info">
                     <label for="phone" class="fw-bold text-secondary">Số điện thoại</label>
-                    <a-input v-model:value="value" size="large" placeholder="Số điện thoại" class="mt-3 " />
+                    <a-input v-model:value="userInfo.phone" size="large" placeholder="Số điện thoại" class="mt-3 " />
                 </div>
                 <div class="user-info">
                     <label for="address" class="fw-bold text-secondary">Địa chỉ</label>
-                    <a-input v-model:value="value" size="large" placeholder="Địa chỉ" class="mt-3" />
+                    <a-input v-model:value="userInfo.address" size="large" placeholder="Địa chỉ" class="mt-3" />
                 </div>
             </div>
-            <a-button type="primary mb-5" size="large">Kết nối Facebook</a-button>
+            <!-- <a-button type="primary mb-5" size="large">Kết nối Facebook</a-button> -->
             <div class="submit d-flex justify-content-end">
                 <button class="cancel me-3">Hủy</button>
-                <button class="save" @click="updateAvatar">Lưu</button>
+                <button class="save" @click="save">Lưu</button>
             </div>
         </div>
     </div>
@@ -84,21 +86,64 @@ export default {
     },
     data() {
         return {
-            value: '',
-            day: null,
-            month: null,
-            year: null,
+            userInfo: {
+                name: '',
+                email: '',
+                phone: '',
+                address: '',
+                avatar: '',
+            },
+            dob: {
+                day: null,
+                month: null,
+                year: null,
+            },
+            description: '',
             gender: '',
             avatarUrl: null,
         };
     },
+    mounted() {
+        this.fetchUserInfo();
+    },
     methods: {
+        async save() {
+            const userBioData = {
+                bio_description: this.bioDescription,
+                dob: `${this.dob.year}-${this.dob.month}-${this.dob.day}`,
+                gender: this.gender,
+                phone: this.userInfo.phone,
+                address: this.userInfo.address,
+                current_job: this.userInfo.current_job,
+                education: this.userInfo.education,
+                current_location: this.userInfo.current_location,
+                hometown: this.userInfo.hometown,
+            };
+
+            try {
+                const response = await axios.put(`http://127.0.0.1:8000/api/saveUserBio/2`, userBioData);
+                console.log('UserBio updated successfully:', response.data);
+                if (this.avatarUrl) {
+                    const userId = getUser().id;
+                    const response = await axios.post(`http://127.0.0.1:8000/api/user/${userId}/update-avatar`, {
+                        avatar: this.avatarUrl
+                    });
+                    console.log("Avatar đã được cập nhật thành công!");
+                }
+
+            } catch (error) {
+                console.error('Error updating UserBio:', error);
+            }
+
+
+
+        },
+
         async handleImageChange(event, type) {
             const file = event.target.files[0];
             if (file) {
                 const formData = new FormData();
                 formData.append('image', file);
-
                 try {
                     const response = await axios.post('http://127.0.0.1:8000/api/uploadAvatar', formData, {
                         headers: {
@@ -116,26 +161,30 @@ export default {
                 }
             }
         },
-
-        async updateAvatar() {
-            if (!this.avatarUrl) {
-                alert("Chưa có avatar để lưu!");
-                return;
-            }
-
+        async fetchUserInfo() {
             try {
-                const userId = getUser().id;
-                const response = await axios.post(`http://127.0.0.1:8000/api/user/${userId}/update-avatar`, {
-                    avatar: this.avatarUrl
-                });
+                const response = await axios.get('http://127.0.0.1:8000/api/userBio/2');
+                const userBio = response.data;
+                const user = userBio.user;
 
-                console.log("Avatar đã được cập nhật thành công!");
-                alert("Cập nhật avatar thành công!");
+                // Cập nhật thông tin người dùng
+                this.userInfo.name = user.username;
+                this.userInfo.email = user.email;
+                this.userInfo.phone = userBio.phone;
+                this.userInfo.address = userBio.address;
+                this.avatarUrl = user.avatar;
+                this.dob.day = userBio.dob ? userBio.dob.split('-')[2] : null;
+                this.dob.month = userBio.dob ? userBio.dob.split('-')[1] : null;
+                this.dob.year = userBio.dob ? userBio.dob.split('-')[0] : null;
+                this.gender = userBio.gender;
+                this.description = userBio.bio_description;
+
+                console.log(this.userInfo);
             } catch (error) {
-                console.error("Lỗi khi cập nhật avatar:", error);
-                alert("Có lỗi xảy ra khi cập nhật avatar.");
+                console.error("Lỗi khi lấy dữ liệu người dùng:", error);
             }
-        }
+        },
+
     }
 };
 </script>

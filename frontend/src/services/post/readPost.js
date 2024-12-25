@@ -17,7 +17,7 @@ export default function useReadPost() {
     const downVotes = ref(0);
     const isCaretUpActive = ref(false);
     const isCaretDownActive = ref(false);
-
+    const voteCount = ref(0);
     // Sticky bar
     const showStickyBar = ref(false);
     const postContentRef = ref(null);
@@ -41,18 +41,28 @@ export default function useReadPost() {
     const author = ref('');
 
     const userId = isLoggedIn() ? getUser().id : null;
-
     const showModal = () => {
         open.value = true;
     };
     // Content
     const fetchPostData = () => {
         axios
-            .get(`http://127.0.0.1:8000/api/posts/${postSlug}`)
+            .get(`http://127.0.0.1:8000/api/post/${postSlug}/${userId}`)
             .then((response) => {
-                post.value = response.data;
-                getAuthor();
-                getTags();
+                console.log(response.data);
+                post.value = response.data.post;
+                author.value = post.value.user;
+                tags.value = post.value.tag;
+                voteCount.value = post.value.votes_count;
+
+                if (response.data.user_vote === "up") {
+                    isCaretUpActive.value = true;
+                } else if (response.data.user_vote === "down") {
+                    isCaretDownActive.value = true;
+                }
+                if (response.data.saved) {
+                    isBookmarked.value = true;
+                }
                 checkFollow();
             })
             .catch(() => {
@@ -141,7 +151,7 @@ export default function useReadPost() {
 
         axios.post('http://127.0.0.1:8000/api/checkFollow', follow)
             .then(response => {
-                isFollowing.value = response.data.isFollowing; // Cập nhật trạng thái follow
+                isFollowing.value = response.data.isFollowing;
             })
             .catch(error => {
                 console.error("Error checking follow status:", error);
@@ -169,6 +179,10 @@ export default function useReadPost() {
         if (!userId) {
             router.push('/login');
         }
+        axios.post('http://127.0.0.1:8000/api/savePost', {
+            users_id: userId,
+            posts_id: post.value.id,
+        });
         isBookmarked.value = !isBookmarked.value;
         if (isBookmarked.value) {
             notification.success({
@@ -202,33 +216,24 @@ export default function useReadPost() {
                 post_id: post.value.id,
                 user_id: userId,
             });
-
-            console.log(response.data.message);
-
             if (type === 'up') {
+                voteCount.value++;
                 isCaretUpActive.value = !isCaretUpActive.value;
-                if (isCaretUpActive.value) isCaretDownActive.value = false;
+                if (isCaretUpActive.value) isCaretDownActive.value = false; voteCount.value--;
             } else {
+                voteCount.value--;
                 isCaretDownActive.value = !isCaretDownActive.value;
-                if (isCaretDownActive.value) isCaretUpActive.value = false;
+                if (isCaretDownActive.value) isCaretUpActive.value = false; voteCount.value++;
             }
 
 
-            fetchVotes();
+
         } catch (error) {
             console.error('Lỗi khi gửi vote:', error);
         }
     };
 
-    const fetchVotes = async () => {
-        try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/votes/${post.value.id}`);
-            upVotes.value = response.data.up_votes;
-            downVotes.value = response.data.down_votes;
-        } catch (error) {
-            console.error('Lỗi khi tải số vote:', error);
-        }
-    };
+
 
     const toggleCaret = (direction) => {
         if (direction === 'up') {
@@ -239,7 +244,6 @@ export default function useReadPost() {
             if (isCaretDownActive.value) isCaretUpActive.value = false;
         }
     };
-    fetchVotes();
 
 
     const renderedContent = computed(() => {
@@ -264,26 +268,7 @@ export default function useReadPost() {
         }
     });
     // 
-    const getAuthor = () => {
-        axios
-            .get(`http://127.0.0.1:8000/api/users/${post.value.users_id}`)
-            .then((response) => {
-                author.value = response.data;
-            })
-            .catch(() => {
-                errorMessage.value = 'Lỗi khi lấy tên người dùng.';
-            });
-    };
-    const getTags = () => {
-        axios
-            .get(`http://127.0.0.1:8000/api/tags/${post.value.tags_id}`)
-            .then((response) => {
-                tags.value = response.data;
-            })
-            .catch(() => {
-                errorMessage.value = 'Lỗi khi lấy tên người dùng.';
-            });
-    };
+
 
     // Sticky bar
     const observeStickyBar = () => {
@@ -320,7 +305,12 @@ export default function useReadPost() {
         return '';
     });
 
-
+    const updatePost = () => {
+        router.push({
+            name: 'updatePost',
+            params: { slug: postSlug }
+        });
+    }
     onMounted(() => {
         fetchPostData();
         observeStickyBar();
@@ -358,6 +348,7 @@ export default function useReadPost() {
         isCaretUpActive,
         isCaretDownActive,
         handleVote,
+        voteCount,
         // Bookmark
         isBookmarked,
         toggleBookmark,
@@ -369,6 +360,8 @@ export default function useReadPost() {
         followUser,
         unfollowUser,
         // delete
-        deletePost
+        deletePost,
+        // Update
+        updatePost,
     };
 }

@@ -1,4 +1,5 @@
 <template>
+
     <div class="d-flex align-items-center" v-if="!isLoggedIn">
         <router-link to="/createAccount" class="text-decoration-none pe-0">
             <span class="signin m-sm-3 d-none d-sm-flex">Đăng ký</span>
@@ -41,15 +42,15 @@
                     </div>
                     <hr class="my-2">
                     <div class="nav-user-contents">
-                        <div class="content">
-                            <i class="fa-regular fa-newspaper fa-lg me-2"></i>
-                            <span>Bài viết của tôi</span>
-                        </div>
+                        <router-link :to="`/account/${user.username}`" class="p-0">
+                            <div class="content">
+                                <i class="fa-regular fa-newspaper fa-lg me-2" style="color: black;"></i>
+                                <span>Bài viết của tôi</span>
+                            </div>
+                        </router-link>
 
-                        <div class="content">
-                            <i class="fa-solid fa-copy fa-lg me-2"></i>
-                            <span>Nháp của tôi</span>
-                        </div>
+
+
                         <div class="content">
                             <i class="fa-regular fa-bookmark fa-lg me-2"></i>
                             <span>Đã lưu</span>
@@ -111,7 +112,6 @@ export default {
                     // Kiểm tra xem API trả về dữ liệu hợp lệ không
                     if (response.data && response.data.avatar) {
                         this.user = response.data;
-                        console.log('User data:', this.user);
                     } else {
                         console.error('User data is missing avatar:', response.data);
                         this.user = null;

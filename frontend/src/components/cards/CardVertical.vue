@@ -12,7 +12,6 @@
                     <div class="d-flex">
                         <i :class="['me-3', 'save-post', isSavePost ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark']"
                             style="color:#c3c3c3 ;cursor: pointer;" @click="toggleSave"></i>
-                        <i class="fa-solid fa-ellipsis-vertical" style="cursor: pointer;"></i>
                     </div>
                 </div>
 
@@ -73,12 +72,30 @@ export default {
 </script>
 
 <style scoped>
+@keyframes pulse {
+    from {
+        transform: scale3d(1, 1, 1);
+    }
+
+    50% {
+        transform: scale3d(1.05, 1.05, 1.05);
+    }
+
+}
+
 .card {
     width: 100%;
     display: flex;
     flex-direction: column;
     padding-top: 1.875rem;
     padding-bottom: 1.875rem;
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale(1.05);
 }
 
 .thumbnail {

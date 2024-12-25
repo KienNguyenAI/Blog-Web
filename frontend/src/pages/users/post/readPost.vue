@@ -12,7 +12,7 @@
                 {{ post.description }}
             </div>
             <div class="create-profile mt-3 d-flex ">
-                <a href="" class="me-3 p-0">
+                <a :href="`/account/${author.username}`" class="me-3 p-0">
                     <img :src="author.avatar" alt="Avatar" class="rounded-circle" style="width: 3rem; height: 3rem;">
                 </a>
                 <div class="details">
@@ -35,7 +35,10 @@
                             </a-menu>
                         </template>
                     </a-dropdown>
-                    <div v-if="userId === author.id" class="btn-delete" @click="showModal">Xóa</div>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div v-if="userId === author.id" class="btn-delete me-2" @click="showModal">Xóa</div>
+                        <div v-if="userId === author.id" class="btn-update" @click="updatePost">Cập nhật</div>
+                    </div>
 
 
                     <a-modal v-model:open="open" title="Xóa bài viết" @ok="deletePost">
@@ -53,17 +56,15 @@
                 :class="{ 'active': isCaretUpActive || (userId === author.id) }"
                 @click="userId !== author.id && handleVote('up')">
             </i>
-            <span class="me-2 ms-2 mb-3">{{ upVotes - downVotes }}</span>
+            <span class="me-2 ms-2 mb-3">{{ voteCount }}</span>
             <i class="fa-solid fa-caret-down fa-2xl downvote caret" :class="{ 'active': isCaretDownActive }"
                 @click="userId !== author.id && handleVote('down')">
             </i>
 
-
             <a href="" class="avatar-container mt-3 p-0">
-                <img src="@/assets/avatars/default.webp" alt="Avatar" class="rounded-circle avatar-img"
-                    style="width: 3rem; height: 3rem;">
+                <img :src="author.avatar" alt="Avatar" class="rounded-circle" style="width: 3rem; height: 3rem;">
             </a>
-            <div class=" mt-3">
+            <div class=" mt-3" v-if="userId !== author.id">
                 <i :class="isBookmarked ? 'fa-solid fa-bookmark fa-lg ' : 'fa-regular fa-bookmark fa-lg'"
                     @click="toggleBookmark">
                 </i>
@@ -75,13 +76,13 @@
                     :class="{ 'active': isCaretUpActive || (userId === author.id) }" :disabled="userId === author.id"
                     @click="userId !== author.id && handleVote('up')">
                 </i>
-                <span class="me-2 ms-2">{{ upVotes - downVotes }}</span>
+                <span class="me-2 ms-2">{{ voteCount }}</span>
                 <i class="fa-solid fa-caret-down fa-2xl downvote caret" :class="{ 'active': isCaretDownActive }"
                     @click="userId !== author.id && handleVote('down')">
                 </i>
 
             </div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center" v-if="userId !== author.id">
                 <i :class="isBookmarked ? 'fa-solid fa-bookmark fa-lg' : 'fa-regular fa-bookmark fa-lg'"
                     @click="toggleBookmark">
                 </i>
@@ -128,7 +129,7 @@
         </button>
 
         <div class="post-comment mt-5">
-            <Comment />
+            <Comment :post="post" />
         </div>
     </div>
 
@@ -161,12 +162,17 @@ export default {
     width: 100%;
 }
 
+.post-container .btn-update,
 .post-container .btn-delete {
     background-color: #f56565;
     padding: .5rem 1rem;
     border-radius: .5rem;
     color: white;
     cursor: pointer;
+}
+
+.post-container .btn-update {
+    background-color: #48bb78;
 }
 
 .post-subscription {

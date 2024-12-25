@@ -50,4 +50,11 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Avatar updated successfully']);
     }
+    public function getAllUsers()
+    {
+        // Sử dụng with() để eager load dữ liệu liên quan đến roles
+        $users = User::with('role')->get();
+
+        return response()->json($users);
+    }
 }

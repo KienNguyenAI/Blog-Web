@@ -31,6 +31,7 @@ class VoteController extends Controller
 
                 return response()->json([
                     'message' => 'Vote has been removed.',
+                    'type' => null,
                 ]);
             }
 
@@ -55,6 +56,7 @@ class VoteController extends Controller
         return response()->json([
             'message' => 'Vote has been added.',
             'vote' => $vote,
+
         ]);
     }
 

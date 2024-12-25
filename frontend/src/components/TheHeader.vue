@@ -2,10 +2,10 @@
     <div :class="['header', { 'no-shadow': !showShadow }]">
         <div class="container">
             <div class="row">
-                <div class="col-sm-8 col-6 d-flex align-items-center justify-content-start">
+                <div class="col-sm-6 col-6 d-flex align-items-center justify-content-start">
                     <a href="/"> <img src="../assets/foxtalesLogo.webp" alt="" style="width: 7rem;"></a>
                 </div>
-                <div class="col-sm-4 col-6 d-sm-flex align-items-center justify-content-sm-end">
+                <div class="col-sm-6 col-6 d-sm-flex align-items-center justify-content-sm-end">
                     <HeaderRight />
                 </div>
             </div>

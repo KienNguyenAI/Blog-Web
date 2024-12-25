@@ -1,0 +1,53 @@
+<template>
+    <div class="shadow p-3 rounded me-5">
+        <a-table :dataSource="dataSource" :columns="columns" />
+    </div>
+</template>
+
+<script>
+import { ref, onMounted } from 'vue';
+export default {
+    setup() {
+        const dataSource = ref([]);
+
+        const columns = [
+            {
+                title: 'Tên tài khoản',
+                key: 'username',
+            },
+            {
+                title: 'Tên',
+                key: 'name',
+            },
+            {
+                title: 'Email',
+                key: 'email',
+            },
+            {
+                title: 'Vai trò',
+                key: 'role',
+            },
+        ];
+
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/users');
+                dataSource.value = response.data;
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        onMounted(fetchUsers);
+
+        return {
+            dataSource,
+            columns,
+        };
+    },
+};
+</script>
+
+<style scoped>
+/* Các style tùy chỉnh cho bảng */
+</style>

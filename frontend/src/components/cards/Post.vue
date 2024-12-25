@@ -35,19 +35,18 @@
                         </i>
                         <span style="font-size: .75rem;">{{ voteCount }}</span>
                     </div>
-                    <div class="me-2">
+                    <!-- <div class="me-2">
                         <i class="fa-regular fa-eye me-1"></i>
                         <span style="font-size: .75rem;">{{ viewCount }}</span>
                     </div>
                     <div class="me-2">
                         <i class="fa-regular fa-comment me-1"></i>
                         <span style="font-size: .75rem;">{{ commentCount }}</span>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="d-flex">
                     <i :class="['me-3', 'save-post', isSavePost ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark']"
                         style="color:#c3c3c3 ;cursor: pointer;" @click="toggleSave"></i>
-                    <i class="fa-solid fa-ellipsis-vertical" style="cursor: pointer;"></i>
                 </div>
             </div>
         </div>

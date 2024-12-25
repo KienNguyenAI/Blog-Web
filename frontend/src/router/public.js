@@ -7,6 +7,7 @@ import setting from "../components/account/setting.vue";
 
 
 import createPost from "../pages/users/post/createPost.vue";
+import updatePost from "../pages/users/post/updatePost.vue";
 import readPost from "../pages/users/post/readPost.vue";
 // Login
 import login from "../pages/auth/login.vue";
@@ -56,7 +57,11 @@ const publicRoutes = [
         path: '/post/write',
         component: createPost,
     },
-
+    {
+        path: '/post/update/:slug',
+        name: 'updatePost',
+        component: updatePost,
+    },
     // Router to login
     {
         path: '/login',

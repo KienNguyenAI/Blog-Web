@@ -6,7 +6,7 @@
                     <div class="ce-paragraph cdx-block" contenteditable="true" @keydown="handleKeydown($event, index)"
                         @mouseup="showToolbar" @keyup="showToolbar" @focus="setActiveBlock(index)"
                         @input="updateBlockContent($event, index)" :placeholder="index === 0 ? 'Nội dung bài viết' : ''"
-                        ref="paragraphs"></div>
+                        v-html="block.content" ref="paragraphs"></div>
 
                     <div class="add-block-buttons" v-if="activeBlockIndex === index && !blocks[index].content.trim()">
                         <a-dropdown placement="bottom" arrow>
@@ -35,12 +35,11 @@
 
                                         </a-menu>
                                     </a-menu>
-                                    < </template>
+                                </template>
                             </a-dropdown>
 
-                            <div class="caption cdx-block mt-1" contenteditable="true" :placeholder="'caption'"
-                                v-if="blocks[index].isImageUploaded">
-
+                            <div class="caption cdx-block mt-1" contenteditable="true" v-html="blocks[index].caption"
+                                :placeholder="'caption'" v-if="blocks[index].isImageUploaded">
                             </div>
                         </div>
                         <a-spin size="large" class="mb-3" v-if="!blocks[index].isImageUploaded" />
@@ -98,8 +97,14 @@
 
 
 <script>
+import { watch } from 'vue';
+
 export default {
+    props: {
+        parsedContent: Array
+    },
     data() {
+
         return {
             blocks: [{ type: 'text', content: '', isImageUploaded: false }],
             activeBlockIndex: null,
@@ -142,7 +147,33 @@ export default {
             linkURL: '',
         };
     },
+    watch: {
+        parsedContent(newContent) {
+            console.log(newContent);
+            newContent.forEach((item, index) => {
+                if (index == 0) {
+                    this.blocks[0].content = item.content;
+
+                }
+                else if (item.type === 'html') {
+                    this.blocks.push({ type: 'text', content: item.content, isImageUploaded: false });
+                }
+                else if (item.type === 'image') {
+                    console.log(item.src);
+                    this.blocks.push({ type: 'image', content: item.src, isImageUploaded: true, caption: item.caption || '' });
+
+                }
+            })
+        }
+    },
     methods: {
+
+        mounted() {
+            document.addEventListener('selectionchange', this.showToolbar);
+        },
+
+
+
         getAllContent() {
             const contents = Array.from(this.$el.querySelectorAll('.ce-block__content'));
 
@@ -422,14 +453,22 @@ export default {
 
         updateBlockContent(event, index) {
             this.blocks[index].content = event.target.innerText;
+            this.$nextTick(() => {
+                const block = this.$refs.paragraphs[index];
+                if (block) {
+                    const range = document.createRange();
+                    const selection = window.getSelection();
+
+                    range.selectNodeContents(block);
+                    range.collapse(false);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            });
         },
 
     },
-    mounted() {
-        document.addEventListener('selectionchange', this.showToolbar);
 
-
-    },
     beforeDestroy() {
         document.removeEventListener('selectionchange', this.showToolbar);
     },

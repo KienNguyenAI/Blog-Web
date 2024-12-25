@@ -5,7 +5,7 @@
         </div>
 
         <div v-else>
-            <div class="row">
+            <div class="row ps-3 pe-3">
                 <Card v-for="(post, index) in posts" :key="index" :imgSrc="post.image" :category="post.tag.name"
                     :cateSlug="post.tag.slug" :title="post.title" :description="post.description"
                     :avatar="post.user.avatar" :authorName="post.user.name" :createdAt="formatDate(post.created_at)"
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { usePosts } from "../../services/post/usePosts";
 import Card from '../../components/cards/Card.vue';
 import { getUser } from "../../services/auth";
@@ -31,9 +31,13 @@ export default {
     setup() {
         const userId = getUser().id;
         const { posts, loading, votes, upvotedPosts, handleUpvote, calculateReadTime, formatDate, handelSavePost, savedPosts } = usePosts(userId);
-
-
-
+        watchEffect(() => {
+            posts.value.forEach(post => {
+                if (!savedPosts.value.includes(post.id)) {
+                    savedPosts.value.push(post.id);
+                }
+            });
+        });
         return {
             posts,
             loading,

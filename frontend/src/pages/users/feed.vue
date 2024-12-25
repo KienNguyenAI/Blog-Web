@@ -14,11 +14,11 @@
                 <StarOutlined class="icon" />
                 <span class="text">MỚI</span>
             </a>
-            <a href="#" class="item follow" :class="{ active: selectedItem === 'DÀNH CHO BẠN' }"
+            <!-- <a href="#" class="item follow" :class="{ active: selectedItem === 'DÀNH CHO BẠN' }"
                 @click.prevent="selectItem('DÀNH CHO BẠN', 'follow')">
                 <HeartOutlined class="icon" />
                 <span class="text">THEO TÁC GIẢ</span>
-            </a>
+            </a> -->
             <a href="#" class="item top" :class="{ active: selectedItem === 'TOP' }"
                 @click.prevent="selectItem('TOP', 'top')">
                 <CrownOutlined class="icon" />

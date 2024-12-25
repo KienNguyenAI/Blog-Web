@@ -1,14 +1,16 @@
 <template>
     <form action="" @submit.prevent="upPosts()">
         <div class="post-form">
-            <div class="title" contenteditable="true" @input="handleInput" :text-content="title"
+            <div class="title" contenteditable="true" @input="handleInput" v-html="title"
                 placeholder="Tiêu đề bài viết.....">
             </div>
 
 
             <div class="editor">
                 <div class="codex-editor " style="padding-bottom: 20rem;">
-                    <CeBlock ref="ceBlockRef" />
+
+
+                    <CeBlock ref="ceBlockRef" :parsedContent="parsedContent" />
 
                 </div>
             </div>
@@ -41,14 +43,14 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <template #footer>
                         <div class=" d-flex justify-content-center align-items-center modal-footer">
                             <button type="button" @click="open = false" class="btn-cancel me-3">Quay
                                 lại</button>
-                            <button @click="upPosts()" class="btn-create">Tạo</button>
+                            <button @click="upPosts()" v-if="!id" class="btn-create">Tạo</button>
+                            <button @click="upPosts(id)" v-else class="btn-create">Cập nhật</button>
                         </div>
                     </template>
                 </a-modal>
@@ -61,7 +63,7 @@
 
 <script>
 import CeBlock from './CeBlock.vue';
-import { reactive, toRefs, ref } from 'vue';
+import { reactive, toRefs, ref, watch, onMounted } from 'vue';
 import { getUser } from '../../services/auth';
 import { notification } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
@@ -71,8 +73,55 @@ export default {
         CeBlock,
         TopicName
     },
+    props: {
+        id: Number,
+        title: String,
+        content: String,
+    },
+    setup(props) {
+        const post = reactive({
+            title: props.title || '',
+            content: '',
+            description: '',
+            image: '',
+            status: 'archived',
+            users_id: getUser().id,
+            tags_id: '',
+        });
 
-    setup() {
+        const parsedContent = ref(null);
+
+        const parseContent = () => {
+            try {
+                const contentArray = JSON.parse(props.content);
+
+                parsedContent.value = contentArray.map(item => {
+                    if (typeof item === 'string') {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(item, 'text/html');
+                        return { type: 'html', content: doc.body.innerText.trim() }; // Lưu dưới dạng văn bản
+                    }
+
+                    else if (typeof item === 'object' && item.src) {
+                        return { type: 'image', src: item.src, caption: item.caption || '' }; // Lưu thông tin hình ảnh
+                    }
+
+                    return null;
+                }).filter(item => item !== null);
+            } catch (error) {
+                console.error("Lỗi khi parse nội dung bài viết:", error);
+            }
+        };
+
+
+
+
+
+
+        onMounted(() => {
+            parseContent();
+        });
+
         const router = useRouter();
         const ceBlockRef = ref(null);
 
@@ -113,18 +162,11 @@ export default {
         const handleInput = (event) => {
             post.title = event.target.innerText.trim();
         };
-        const post = reactive({
-            title: '',
-            content: '',
-            description: '',
-            image: '',
-            status: 'published',
-            users_id: getUser().id,
-            tags_id: '',
-        });
 
 
-        const upPosts = () => {
+
+        const upPosts = (id) => {
+
             const contentData = ceBlockRef.value.getAllContent();
             if (!contentData || contentData.length === 0) {
                 notification.error({
@@ -154,10 +196,8 @@ export default {
             post.content = JSON.stringify(contentData);
 
 
-            // Lấy danh sách tags_id từ selectedTags
             const tags_id = selectedTags.value.map(tag => tag.id);
 
-            // Kiểm tra nếu chưa chọn thẻ nào
             if (tags_id === 0) {
                 notification.error({
                     message: 'Bạn cần chọn ít nhất một danh mục',
@@ -167,15 +207,17 @@ export default {
                 return;
             }
             post.tags_id = tags_id[0];
+            const requestMethod = id ? axios.put : axios.post;
+            const requestUrl = id ? `http://127.0.0.1:8000/api/posts/${id}` : 'http://127.0.0.1:8000/api/posts';
 
             // Gửi API
-            axios.post('http://127.0.0.1:8000/api/posts', post)
+            requestMethod(requestUrl, post)
                 .then((response) => {
                     const postData = response.data;
                     post.value = postData.post;
                     router.push(`/post/${post.value.slug}`);
                     notification.success({
-                        message: 'Bài viết đã được tạo thành công!',
+                        message: id ? 'Bài viết đã được cập nhật thành công!' : 'Bài viết đã được tạo thành công!',
                         duration: 2,
                         style: { backgroundColor: '#f6ffed' },
                     });
@@ -199,7 +241,8 @@ export default {
             tagsData,
             selectedTags,
             removeSelectedTag,
-            toggleSelectTag
+            toggleSelectTag,
+            parsedContent
         };
     },
 
